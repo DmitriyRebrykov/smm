@@ -1,0 +1,483 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SMM & AI Креатор - София Шляпцева{% endblock %}
+
+{% block content %}
+<div id="menu-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 opacity-0 invisible transition-all duration-300"></div>
+
+<div id="slide-menu" class="fixed top-0 right-0 h-full w-80 bg-dark-gray z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+    <div class="flex flex-col h-full">
+        <!-- Menu Header -->
+        <div class="flex justify-between items-center p-6 border-b border-light-gray/20">
+            <h2 class="text-xl font-montserrat text-cream">Меню</h2>
+            <button id="close-menu-btn" class="text-cream hover:bg-navy/20 p-2 rounded-md transition-colors">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Menu Items -->
+        <nav class="flex-1 p-6">
+            <div class="space-y-4">
+                <button onclick="scrollToSection('about')" class="w-full text-left text-cream hover:text-navy hover:bg-cream/10 px-4 py-3 rounded-md transition-colors text-lg">
+                    Обо мне
+                </button>
+                <button onclick="scrollToSection('services')" class="w-full text-left text-cream hover:text-navy hover:bg-cream/10 px-4 py-3 rounded-md transition-colors text-lg">
+                    Услуги
+                </button>
+                <button onclick="scrollToSection('cases')" class="w-full text-left text-cream hover:text-navy hover:bg-cream/10 px-4 py-3 rounded-md transition-colors text-lg">
+                    Кейсы
+                </button>
+                <button onclick="scrollToSection('testimonials')" class="w-full text-left text-cream hover:text-navy hover:bg-cream/10 px-4 py-3 rounded-md transition-colors text-lg">
+                    Отзывы
+                </button>
+                <button onclick="scrollToSection('faq')" class="w-full text-left text-cream hover:text-navy hover:bg-cream/10 px-4 py-3 rounded-md transition-colors text-lg">
+                    Вопросы
+                </button>
+                <button onclick="scrollToSection('contact')" class="w-full text-left text-cream hover:text-navy hover:bg-cream/10 px-4 py-3 rounded-md transition-colors text-lg">
+                    Контакты
+                </button>
+            </div>
+        </nav>
+
+        <!-- Menu Footer -->
+        <div class="p-6 border-t border-light-gray/20">
+            <div class="text-center">
+                <p class="text-cream/80 text-sm mb-4">Свяжитесь со мной</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#" class="text-cream hover:text-navy transition-colors">
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.017 2.011c-5.506 0-9.971 4.465-9.971 9.971 0 1.518.338 2.956.94 4.24L2 21l4.941-.986c1.204.598 2.566.926 3.994.926 5.506 0 9.971-4.465 9.971-9.971S17.523 2.011 12.017 2.011z"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:hello@smmcreator.com" class="text-cream hover:text-navy transition-colors">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </a>
+                    <a href="tel:+79001234567" class="text-cream hover:text-navy transition-colors">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+        <img src="{%static 'main/images/background.jpg'%}" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+    
+    <!-- Content Overlay -->
+    <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto ml-auto mr-16 md:mx-auto">
+        <h1 class="text-6xl md:text-7xl font-montserrat mb-6 text-shadow-lg">
+            София Шляпцева
+        </h1>
+        <p class="text-xl md:text-3xl font-light mb-8 max-w-2xl">
+            Создаю контент, который бьет по болевым точкам клиентов и приносит результат. 5+ лет опыта в SMM + передовые AI технологии.
+        </p>
+        <button onclick="scrollToSection('contact')" class="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30 text-lg px-8 py-4 rounded-full font-medium transition-all duration-300 hover:scale-105">
+            НАЧАТЬ С НАС
+        </button>
+    </div>
+</section>
+
+<section id="about" class="py-20 bg-cream">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h3 class="text-4xl font-anastasia text-navy mb-6">Про мене</h3>
+                <p class="text-lg mb-6">
+                    Привіт! Я SMM-спеціаліст з 5-річним досвідом, який поєднує класичні методи просування з можливостями штучного інтелекту.
+                </p>
+                <p class="text-lg mb-6">
+                    Моя суперсила — створювати контент, який не просто красивий, а працює. Я знаю, як знайти больові точки вашої аудиторії і створити контент, який змусить їх діяти.
+                </p>
+                <div class="grid grid-cols-2 gap-4 text-center mb-6">
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                        <div class="text-4xl font-bold text-navy mb-2">5+</div>
+                        <div class="text-light-gray">років досвіду</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                        <div class="text-4xl font-bold text-navy mb-2">100+</div>
+                        <div class="text-light-gray">проєктів</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="relative w-full max-w-2xl mx-auto">
+                    <div class="relative h-96 overflow-hidden rounded-2xl shadow-2xl">
+                        <img id="carousel-image" src="" alt="Робота над SMM контентом" class="w-full h-full object-cover transition-all duration-700 ease-in-out">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+
+                        <button onclick="previousPhoto()" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-navy p-3 rounded-full transition-all hover:scale-110 shadow-lg">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+
+                        <button onclick="nextPhoto()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-navy p-3 rounded-full transition-all hover:scale-110 shadow-lg">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+
+                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm px-6 py-2 rounded-full">
+                            <p id="carousel-caption" class="text-sm font-medium text-navy"></p>
+                        </div>
+                    </div>
+
+                    <div id="carousel-dots" class="flex justify-center mt-6 space-x-3">
+                        <button onclick="goToPhoto(0)" class="carousel-dot w-3 h-3 rounded-full bg-navy transition-all duration-300"></button>
+                        <button onclick="goToPhoto(1)" class="carousel-dot w-3 h-3 rounded-full bg-light-gray transition-all duration-300"></button>
+                        <button onclick="goToPhoto(2)" class="carousel-dot w-3 h-3 rounded-full bg-light-gray transition-all duration-300"></button>
+                        <button onclick="goToPhoto(3)" class="carousel-dot w-3 h-3 rounded-full bg-light-gray transition-all duration-300"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="services" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <h3 class="text-4xl font-anastasia text-navy text-center mb-12">Мои услуги</h3>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-cream p-6 rounded-lg shadow-sm hover:shadow-lg transition-shadow text-center">
+                <div class="text-navy mb-4 flex justify-center">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">SMM Стратегия</h4>
+                <p class="text-light-gray">Разработка комплексной стратегии продвижения в социальных сетях с учетом специфики вашего бизнеса</p>
+            </div>
+
+            <div class="bg-cream p-6 rounded-lg shadow-sm hover:shadow-lg transition-shadow text-center">
+                <div class="text-navy mb-4 flex justify-center">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">AI Контент</h4>
+                <p class="text-light-gray">Создание уникального контента с использованием искусственного интеллекта для максимального вовлечения</p>
+            </div>
+
+            <div class="bg-cream p-6 rounded-lg shadow-sm hover:shadow-lg transition-shadow text-center">
+                <div class="text-navy mb-4 flex justify-center">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">Аналитика</h4>
+                <p class="text-light-gray">Глубокий анализ эффективности и оптимизация стратегии на основе данных</p>
+            </div>
+
+            <div class="bg-cream p-6 rounded-lg shadow-sm hover:shadow-lg transition-shadow text-center">
+                <div class="text-navy mb-4 flex justify-center">
+                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                </div>
+                <h4 class="text-xl font-semibold mb-3">Таргетинг</h4>
+                <p class="text-light-gray">Настройка точечной рекламы для привлечения целевой аудитории</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="cases" class="py-24 bg-cream">
+    <div class="container mx-auto px-4">
+        <h3 class="text-5xl font-anastasia text-navy text-center mb-16">Кейсы</h3>
+        <div class="grid md:grid-cols-3 gap-12">
+            <div class="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300">
+                <div class="p-8">
+                    <img src="unnamed.png" alt="Кейс интернет-магазина" class="w-full h-64 object-cover rounded-lg mb-6">
+                    <h4 class="text-2xl font-semibold mb-3">Интернет-магазин одежды</h4>
+                    <p class="text-light-gray mb-6 text-lg">
+                        Увеличение продаж на 150% за 3 месяца через AI-контент и таргетированную рекламу
+                    </p>
+                    <div class="flex justify-between text-base">
+                        <span class="text-golden font-semibold">+150% продаж</span>
+                        <span class="text-golden font-semibold">3 месяца</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300">
+                <div class="p-8">
+                    <img src="unnamed.png" alt="Кейс фитнес-тренера" class="w-full h-64 object-cover rounded-lg mb-6">
+                    <h4 class="text-2xl font-semibold mb-3">Фитнес-тренер</h4>
+                    <p class="text-light-gray mb-6 text-lg">
+                        Рост подписчиков в 5 раз и запуск онлайн-курсов через персональный бренд
+                    </p>
+                    <div class="flex justify-between text-base">
+                        <span class="text-golden font-semibold">×5 подписчиков</span>
+                        <span class="text-golden font-semibold">4 месяца</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300">
+                <div class="p-8">
+                    <img src="/unnamed.png" alt="Кейс IT-стартапа" class="w-full h-64 object-cover rounded-lg mb-6">
+                    <h4 class="text-2xl font-semibold mb-3">IT-стартап</h4>
+                    <p class="text-light-gray mb-6 text-lg">
+                        Привлечение инвесторов и первых клиентов через контент-стратегию в LinkedIn
+                    </p>
+                    <div class="flex justify-between text-base">
+                        <span class="text-golden font-semibold">50+ лидов</span>
+                        <span class="text-golden font-semibold">2 месяца</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-12">
+            <button onclick="showAllCases()" class="bg-navy hover:bg-navy/90 text-cream text-lg px-10 py-4 rounded-full font-medium transition-all duration-300 hover:scale-105">
+                Все кейсы
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Updated scrolling banner with duplicated text for seamless infinite loop -->
+<div class="scrolling-banner py-3 text-white font-medium">
+    <div class="scrolling-text">
+        SMM • Telegram • TikTok • Facebook • YouTube Shorts • Strategy • Consultations • AI creator • Designer • Target • Instagram 
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <h3 class="text-4xl font-anastasia text-navy text-center mb-12">Отзывы клиентов</h3>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-cream rounded-lg shadow-sm hover:shadow-lg transition-shadow">
+                <div class="p-6">
+                    <p class="text-light-gray mb-4 italic">"Благодаря работе с AI-контентом продажи выросли на 150%. Профессиональный подход и отличные результаты!"</p>
+                    <div class="border-t border-light-gray/20 pt-4">
+                        <h5 class="font-semibold">Анна Петрова</h5>
+                        <p class="text-sm text-light-gray">Владелец онлайн-магазина</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-cream rounded-lg shadow-sm hover:shadow-lg transition-shadow">
+                <div class="p-6">
+                    <p class="text-light-gray mb-4 italic">"Стратегия SMM помогла нам найти новых клиентов. Рекомендую как надежного специалиста!"</p>
+                    <div class="border-t border-light-gray/20 pt-4">
+                        <h5 class="font-semibold">Михаил Сидоров</h5>
+                        <p class="text-sm text-light-gray">Директор IT-компании</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-cream rounded-lg shadow-sm hover:shadow-lg transition-shadow">
+                <div class="p-6">
+                    <p class="text-light-gray mb-4 italic">"Контент стал более живым и интересным. Подписчики активно взаимодействуют с постами."</p>
+                    <div class="border-t border-light-gray/20 pt-4">
+                        <h5 class="font-semibold">Елена Козлова</h5>
+                        <p class="text-sm text-light-gray">Фитнес-тренер</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section id="faq" class="py-20 bg-cream">
+    <div class="container mx-auto px-4">
+        <h3 class="text-4xl font-montserrat text-center mb-12">НАЙЧАСТІШІ ПИТАННЯ ВІД КЛІЄНТІВ</h3>
+        <div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <div class="faq-item border-b-2 border-navy">
+                    <button class="faq-question w-full text-left py-4 flex justify-between items-center text-dark-gray hover:text-navy transition-colors" onclick="toggleFAQ(this)">
+                        <span class="text-lg">Скільки коштують ваші послуги?</span>
+                        <span class="faq-icon text-2xl text-navy transition-transform duration-300">+</span>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out opacity-0">
+                        <div class="pb-4 text-light-gray">
+                            <p>Вартість залежить від обсягу робіт та складності проекту. SMM стратегія від 15 000 грн, створення контенту від 8 000 грн за місяць, AI контент від 12 000 грн. Надаю детальну консультацію після аналізу ваших потреб.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item border-b-2 border-navy">
+                    <button class="faq-question w-full text-left py-4 flex justify-between items-center text-dark-gray hover:text-navy transition-colors" onclick="toggleFAQ(this)">
+                        <span class="text-lg">Чи можна замовити лише ведення Instagram / TikTok без інших послуг?</span>
+                        <span class="faq-icon text-2xl text-navy transition-transform duration-300">+</span>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out opacity-0">
+                        <div class="pb-4 text-light-gray">
+                            <p>Так, звичайно! Можу працювати тільки з однією платформою. Ведення Instagram або TikTok включає створення контенту, публікацію постів, взаємодію з аудиторією та базову аналітику.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item border-b-2 border-navy">
+                    <button class="faq-question w-full text-left py-4 flex justify-between items-center text-dark-gray hover:text-navy transition-colors" onclick="toggleFAQ(this)">
+                        <span class="text-lg">Навіщо мені стратегія?</span>
+                        <span class="faq-icon text-2xl text-navy transition-transform duration-300">+</span>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out opacity-0">
+                        <div class="pb-4 text-light-gray">
+                            <p> Стратегія – це план, за яким ми будемо працювати у соцмережах. Вона допомагає:зрозуміти, що саме показувати вашим клієнтам;визначити, як часто публікувати пости;зрозуміти, як досягти ваших бізнес-цілей.Без стратегії постимо хаотично – і результат буде випадковий, а не плановий.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item border-b-2 border-navy">
+                    <button class="faq-question w-full text-left py-4 flex justify-between items-center text-dark-gray hover:text-navy transition-colors" onclick="toggleFAQ(this)">
+                        <span class="text-lg">Через скільки чекати результат?</span>
+                        <span class="faq-icon text-2xl text-navy transition-transform duration-300">+</span>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out opacity-0">
+                        <div class="pb-4 text-light-gray">
+                            <p> Зазвичай перші помітні результати з’являються через 2–3 місяці.
+Чому так? Кожна ніша різна, і підхід до вашого бізнесу треба налаштовувати індивідуально.
+
+
+Перший час ми тестуємо контент, рекламу і стиль спілкування з аудиторією, щоб зрозуміти, що працює найкраще.
+</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <div class="faq-item border-b-2 border-navy">
+                    <button class="faq-question w-full text-left py-4 flex justify-between items-center text-dark-gray hover:text-navy transition-colors" onclick="toggleFAQ(this)">
+                        <span class="text-lg">Ви працюєте з брендами за межами України?</span>
+                        <span class="faq-icon text-2xl text-navy transition-transform duration-300">+</span>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out opacity-0">
+                        <div class="pb-4 text-light-gray">
+                            <p>Так, працюю з клієнтами з різних країн. Маю досвід роботи з брендами з США, Європи та СНД. Комунікація відбувається онлайн, що дозволяє ефективно співпрацювати незалежно від локації.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item border-b-2 border-navy">
+                    <button class="faq-question w-full text-left py-4 flex justify-between items-center text-dark-gray hover:text-navy transition-colors" onclick="toggleFAQ(this)">
+                        <span class="text-lg">Скільки часу потрібно, щоб побачити результат?</span>
+                        <span class="faq-icon text-2xl text-navy transition-transform duration-300">+</span>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out opacity-0">
+                        <div class="pb-4 text-light-gray">
+                            <p>Перші результати (зростання охоплень, вовлеченості) видно через 2-3 тижні. Значні зміни в продажах та кількості підписників - через 1-2 місяці регулярної роботи. Все залежить від ніші та початкового стану акаунту.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item border-b-2 border-navy">
+                    <button class="faq-question w-full text-left py-4 flex justify-between items-center text-dark-gray hover:text-navy transition-colors" onclick="toggleFAQ(this)">
+                        <span class="text-lg"> Чи потрібно моє залучення до роботи?
+</span>
+                        <span class="faq-icon text-2xl text-navy transition-transform duration-300">+</span>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out opacity-0">
+                        <div class="pb-4 text-light-gray">
+                            <p> Так, ви потрібні, але не для того, щоб робити всю роботу за СММ.
+Ваша роль – давати інформацію про продукт/послугу, погоджувати контент і відповідати на важливі запити.
+
+
+Не можна повністю “віддати все СММ”, інакше контент буде відчуженим і не відображатиме ваш бренд.
+</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="py-20 bg-cream">
+    <div class="container mx-auto px-4">
+        <h3 class="text-4xl font-montserrat text-center mb-12">Контакты</h3>
+        <div class="grid md:grid-cols-2 gap-12 items-start">
+            <div>
+                <div class="bg-white rounded-lg shadow-sm p-6 max-w-2xl mx-auto">
+                    <h4 class="text-2xl font-montserrat text-center text-navy mb-6">Оставить заявку</h4>
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <input type="text" id="name" name="name" placeholder="Ваше имя" required class="w-full px-4 py-3 border border-light-gray/20 rounded-md focus:outline-none focus:ring-2 focus:ring-navy/20">
+                        </div>
+
+                        <div>
+                            <input type="email" id="email" name="email" placeholder="Email" required class="w-full px-4 py-3 border border-light-gray/20 rounded-md focus:outline-none focus:ring-2 focus:ring-navy/20">
+                        </div>
+
+                        <div>
+                            <select id="service" name="service" class="w-full px-4 py-3 border border-light-gray/20 rounded-md focus:outline-none focus:ring-2 focus:ring-navy/20">
+                                <option value="">Выберите услугу</option>
+                                <option value="smm-strategy">SMM стратегия</option>
+                                <option value="content-creation">Создание контента</option>
+                                <option value="ai-content">AI контент</option>
+                                <option value="analytics">Аналитика и отчеты</option>
+                                <option value="consultation">Консультация</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <textarea id="message" name="message" placeholder="Расскажите о вашем проекте..." rows="4" class="w-full px-4 py-3 border border-light-gray/20 rounded-md focus:outline-none focus:ring-2 focus:ring-navy/20"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-navy hover:bg-navy/90 text-cream py-3 rounded-full font-medium transition-colors">
+                            Отправить заявку
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="space-y-8">
+                <div>
+                    <h4 class="text-2xl font-montserrat text-navy mb-6">Свяжитесь со мной</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <svg class="h-5 w-5 text-navy" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.017 2.011c-5.506 0-9.971 4.465-9.971 9.971 0 1.518.338 2.956.94 4.24L2 21l4.941-.986c1.204.598 2.566.926 3.994.926 5.506 0 9.971-4.465 9.971-9.971S17.523 2.011 12.017 2.011z"/>
+                            </svg>
+                            <a href="#" class="text-light-gray hover:text-navy transition-colors">@smm_ai_creator</a>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="h-5 w-5 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <a href="mailto:hello@smmcreator.com" class="text-light-gray hover:text-navy transition-colors">hello@smmcreator.com</a>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="h-5 w-5 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                            <a href="tel:+79001234567" class="text-light-gray hover:text-navy transition-colors">+7 (900) 123-45-67</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h5 class="text-lg font-semibold mb-3">Как я работаю:</h5>
+                    <ol class="space-y-2 text-light-gray">
+                        <li>1. Анализ вашего бизнеса и аудитории</li>
+                        <li>2. Разработка стратегии и контент-плана</li>
+                        <li>3. Создание контента с использованием AI</li>
+                        <li>4. Запуск и оптимизация рекламы</li>
+                        <li>5. Регулярная аналитика и корректировки</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="{%static 'main/js/main.js'%}"></script>
+{%endblock%}
