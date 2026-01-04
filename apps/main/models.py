@@ -37,3 +37,10 @@ class ContactRequest(models.Model):
         return f"{self.name} - {self.email} ({self.created_at.strftime('%d.%m.%Y %H:%M')})"
 
 
+class Case(models.Model):
+    title = models.CharField(max_length=50)
+    description = models.TextField()
+    image = models.ImageField()
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
+

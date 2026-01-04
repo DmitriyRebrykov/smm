@@ -1,0 +1,300 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Отзывы учеников | Sofia SMM Revolution{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Стилизация скроллбара для видео-отзывов */
+    .stories-scroll::-webkit-scrollbar {
+        height: 4px;
+    }
+    .stories-scroll::-webkit-scrollbar-track {
+        background: #181614;
+    }
+    .stories-scroll::-webkit-scrollbar-thumb {
+        background: #C59D5F;
+        border-radius: 2px;
+    }
+
+    /* Эффект свечения для видео-карточек */
+    .video-card:hover {
+        box-shadow: 0 0 30px rgba(197, 157, 95, 0.2);
+        border-color: #C59D5F;
+    }
+
+    /* Стилизация "Сообщения в Direct" для скриншотов */
+    .dm-bubble {
+        background: #262626;
+        border-radius: 12px;
+        border-bottom-left-radius: 2px;
+        position: relative;
+    }
+    .dm-bubble::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: -8px;
+        width: 10px;
+        height: 10px;
+        background: #262626;
+        clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative pt-32 pb-16 md:pt-40 md:pb-20 overflow-hidden bg-luxury-black">
+    <!-- Фоновое свечение -->
+    <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-luxury-gold/5 rounded-full blur-[120px] pointer-events-none -translate-x-1/3 -translate-y-1/3"></div>
+    <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-luxury-gold/5 rounded-full blur-[100px] pointer-events-none translate-x-1/3 translate-y-1/3"></div>
+
+    <div class="container mx-auto px-4 relative z-10 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold font-montserrat text-white mb-6 uppercase tracking-wider">
+            Истории <span class="text-luxury-gold">Успеха</span>
+        </h1>
+        <p class="text-luxury-muted text-lg max-w-2xl mx-auto font-light leading-relaxed mb-10">
+            Лучшая оценка моей работы — это результаты моих учеников. От первых клиентов до выхода на $2000+ в месяц.
+        </p>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto border-t border-b border-white/10 py-8">
+            <div>
+                <div class="text-3xl md:text-4xl font-bold text-white mb-1">500+</div>
+                <div class="text-luxury-gold text-xs uppercase tracking-widest">Учеников</div>
+            </div>
+            <div>
+                <div class="text-3xl md:text-4xl font-bold text-white mb-1">98%</div>
+                <div class="text-luxury-gold text-xs uppercase tracking-widest">Довольны</div>
+            </div>
+            <div>
+                <div class="text-3xl md:text-4xl font-bold text-white mb-1">$50k+</div>
+                <div class="text-luxury-gold text-xs uppercase tracking-widest">Заработали ученики</div>
+            </div>
+            <div>
+                <div class="text-3xl md:text-4xl font-bold text-white mb-1">4.9</div>
+                <div class="text-luxury-gold text-xs uppercase tracking-widest">Рейтинг курса</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Video Reviews (Stories Format) -->
+<section class="py-16 bg-luxury-card border-b border-white/5 overflow-hidden">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+            <span class="w-2 h-8 bg-luxury-gold block"></span>
+            Видео-отзывы
+        </h2>
+
+        <!-- Горизонтальный скролл -->
+        <div class="stories-scroll flex gap-6 overflow-x-auto pb-8 snap-x">
+
+            <!-- Video 1 -->
+            <div class="video-card min-w-[280px] h-[500px] bg-luxury-black border border-white/10 rounded-xl relative overflow-hidden group transition-all duration-300 snap-center cursor-pointer">
+                <!-- Превью (заглушка) -->
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+
+                <!-- Play Button -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+
+                <!-- Info Overlay -->
+                <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
+                    <p class="text-white font-bold text-lg">Мария</p>
+                    <p class="text-luxury-gold text-sm">Заработала $800 на курсе</p>
+                </div>
+            </div>
+
+            <!-- Video 2 -->
+            <div class="video-card min-w-[280px] h-[500px] bg-luxury-black border border-white/10 rounded-xl relative overflow-hidden group transition-all duration-300 snap-center cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
+                    <p class="text-white font-bold text-lg">Алина</p>
+                    <p class="text-luxury-gold text-sm">Ушла из офиса в SMM</p>
+                </div>
+            </div>
+
+            <!-- Video 3 -->
+            <div class="video-card min-w-[280px] h-[500px] bg-luxury-black border border-white/10 rounded-xl relative overflow-hidden group transition-all duration-300 snap-center cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
+                    <p class="text-white font-bold text-lg">Кристина</p>
+                    <p class="text-luxury-gold text-sm">Нашла клиента в Дубае</p>
+                </div>
+            </div>
+
+            <!-- Video 4 -->
+            <div class="video-card min-w-[280px] h-[500px] bg-luxury-black border border-white/10 rounded-xl relative overflow-hidden group transition-all duration-300 snap-center cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
+                    <p class="text-white font-bold text-lg">Оксана</p>
+                    <p class="text-luxury-gold text-sm">С нуля до профи</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Text Reviews Grid -->
+<section class="py-24 bg-luxury-black relative">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-16 uppercase tracking-wider">
+            Результаты в <span class="text-luxury-gold">Цифрах</span>
+        </h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Review Card 1 -->
+            <div class="bg-luxury-card border border-white/5 p-8 hover:border-luxury-gold transition-all duration-300 group">
+                <div class="flex items-center gap-4 mb-6">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
+                    <div>
+                        <h4 class="text-white font-bold">Елена В.</h4>
+                        <p class="text-luxury-muted text-xs">Ниша: Бьюти мастер</p>
+                    </div>
+                    <div class="ml-auto text-luxury-gold">★★★★★</div>
+                </div>
+                <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
+                    "Я думала, что SMM — это просто постить фоточки. София полностью перевернула мое мышление. После модуля по стратегии я подняла цены в салоне на 30% и запись полная!"
+                </p>
+                <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
+                    <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
+                    <p class="text-white font-bold">+1500 подписчиков за месяц</p>
+                </div>
+            </div>
+
+            <!-- Review Card 2 -->
+            <div class="bg-luxury-card border border-white/5 p-8 hover:border-luxury-gold transition-all duration-300 group">
+                <div class="flex items-center gap-4 mb-6">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
+                    <div>
+                        <h4 class="text-white font-bold">Виктория С.</h4>
+                        <p class="text-luxury-muted text-xs">Ниша: Студентка</p>
+                    </div>
+                    <div class="ml-auto text-luxury-gold">★★★★★</div>
+                </div>
+                <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
+                    "Курс окупился еще во время обучения. Нашла первого клиента на ведение за $300 уже на 3-й неделе. Материалы очень структурированы, без воды."
+                </p>
+                <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
+                    <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
+                    <p class="text-white font-bold">Первый клиент на $300</p>
+                </div>
+            </div>
+
+            <!-- Review Card 3 -->
+            <div class="bg-luxury-card border border-white/5 p-8 hover:border-luxury-gold transition-all duration-300 group">
+                <div class="flex items-center gap-4 mb-6">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
+                    <div>
+                        <h4 class="text-white font-bold">Максим Д.</h4>
+                        <p class="text-luxury-muted text-xs">Ниша: Таргетолог</p>
+                    </div>
+                    <div class="ml-auto text-luxury-gold">★★★★★</div>
+                </div>
+                <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
+                    "Пришел подтянуть знания по контенту, а получил полноценную профессию контент-мейкера. Теперь продаю услуги комплексно: таргет + контент."
+                </p>
+                <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
+                    <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
+                    <p class="text-white font-bold">Средний чек вырос в 2 раза</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Screenshots / Chat Proof Section -->
+<section class="py-20 bg-luxury-card border-t border-white/5">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-white mb-16">
+            Реальные <span class="text-luxury-gold">Переписки</span>
+        </h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Chat Item 1 -->
+            <div class="flex flex-col gap-4">
+                <div class="flex items-end gap-3">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full">
+                    <div class="dm-bubble p-4 max-w-[85%]">
+                        <p class="text-luxury-text text-sm">София, я в шоке! 😭 Вчера выложила Reels по твоей схеме, он набрал 10к просмотров за ночь!</p>
+                    </div>
+                </div>
+                <div class="flex items-end gap-3">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full">
+                    <div class="dm-bubble p-4 max-w-[85%]">
+                        <p class="text-luxury-text text-sm">Уже 3 заявки в директ упало на консультацию. Спасибо тебе огромное за этот модуль! ❤️</p>
+                    </div>
+                </div>
+                <p class="text-xs text-luxury-muted ml-12 mt-1">Вчера, 10:42</p>
+            </div>
+
+             <!-- Chat Item 2 -->
+             <div class="flex flex-col gap-4">
+                <div class="flex items-end gap-3">
+                    <img src="https://randomuser.me/api/portraits/women/12.jpg" class="w-8 h-8 rounded-full">
+                    <div class="dm-bubble p-4 max-w-[85%]">
+                        <p class="text-luxury-text text-sm">Отчитываюсь по домашке. Клиент согласовал стратегию с первого раза! Сказал, что такого уровня проработки еще не видел.</p>
+                    </div>
+                </div>
+                <div class="flex items-end gap-3">
+                    <img src="https://randomuser.me/api/portraits/women/12.jpg" class="w-8 h-8 rounded-full">
+                    <div class="dm-bubble p-4 max-w-[85%]">
+                        <p class="text-luxury-text text-sm">Предоплату уже скинули на карту 💳</p>
+                    </div>
+                </div>
+                <p class="text-xs text-luxury-muted ml-12 mt-1">Сегодня, 14:15</p>
+            </div>
+
+            <!-- Screenshot Image (Placeholder) -->
+            <div class="hidden lg:block relative group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover rounded-xl opacity-60 group-hover:opacity-100 transition-opacity border border-white/10">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="bg-black/70 text-white px-4 py-2 rounded-full text-sm backdrop-blur-md border border-white/20">Скриншоты оплат</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-24 bg-luxury-black relative overflow-hidden border-t border-white/5">
+    <div class="absolute inset-0 bg-luxury-gold/5 pointer-events-none"></div>
+    <div class="container mx-auto px-4 text-center relative z-10">
+        <h2 class="text-3xl md:text-5xl font-bold font-montserrat text-white mb-6">
+            Стань следующим <span class="text-luxury-gold">Кейсом</span>
+        </h2>
+        <p class="text-luxury-muted text-lg mb-10 max-w-2xl mx-auto font-light">
+            Присоединяйся к потоку и начни зарабатывать на SMM уже через 4 недели.
+        </p>
+        <a href="{% url 'main:index' %}#contact" class="inline-block px-12 py-5 bg-luxury-gold text-black hover:bg-white transition-all duration-300 uppercase tracking-widest text-sm font-bold shadow-[0_0_20px_rgba(197,157,95,0.3)]">
+            Записаться на курс
+        </a>
+    </div>
+</section>
+
+{% endblock %}

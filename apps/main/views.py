@@ -15,6 +15,8 @@ def index(request):
 def cases(request):
     return render(request, 'main/cases.html')
 
+def reviews(request):
+    return render(request, 'main/reviews.html')
 
 @require_http_methods(["POST"])
 def submit_contact_form(request):
