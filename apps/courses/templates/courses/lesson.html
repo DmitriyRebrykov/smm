@@ -1,273 +1,280 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %}Урок 1: Фундамент SMM | Sofia SMM Course{% endblock %}
+{% block title %}{{ lesson.title }} | {{ course.title }}{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Кастомный скролл для списка уроков */
-    .lesson-list-scroll::-webkit-scrollbar {
+    /* Скрываем скроллбар, но оставляем функционал */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    /* Кастомный скролл для плейлиста */
+    .playlist-scroll::-webkit-scrollbar {
         width: 4px;
     }
-    .lesson-list-scroll::-webkit-scrollbar-track {
-        background: #181614;
+    .playlist-scroll::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.02);
     }
-    .lesson-list-scroll::-webkit-scrollbar-thumb {
+    .playlist-scroll::-webkit-scrollbar-thumb {
         background: #333;
         border-radius: 2px;
     }
-    .lesson-list-scroll::-webkit-scrollbar-thumb:hover {
+    .playlist-scroll::-webkit-scrollbar-thumb:hover {
         background: #C59D5F;
     }
 
-    /* Активный урок */
-    .lesson-item.active {
-        background: linear-gradient(90deg, rgba(197, 157, 95, 0.1) 0%, transparent 100%);
-        border-left: 3px solid #C59D5F;
+    /* Эффект активного урока */
+    .lesson-row.active {
+        background: rgba(197, 157, 95, 0.1);
+        border-left-color: #C59D5F;
+    }
+    .lesson-row.active .lesson-title {
+        color: #C59D5F;
+    }
+    .lesson-row.active .play-icon {
+        opacity: 1;
+        transform: scale(1);
     }
 
-    /* Эффект свечения для видео */
-    .video-glow {
-        box-shadow: 0 0 50px rgba(197, 157, 95, 0.15);
+    /* Кинематографичное свечение видео */
+    .cinema-glow {
+        box-shadow: 0 0 80px -20px rgba(197, 157, 95, 0.15);
     }
 
     /* Анимация табов */
-    .tab-content {
+    .tab-pane {
         display: none;
-        animation: fadeIn 0.4s ease;
+        animation: fadeEffect 0.4s;
     }
-    .tab-content.active {
+    .tab-pane.active {
         display: block;
     }
-
-    .tab-btn.active {
-        color: #C59D5F;
-        border-bottom: 2px solid #C59D5F;
+    @keyframes fadeEffect {
+        from {opacity: 0; transform: translateY(10px);}
+        to {opacity: 1; transform: translateY(0);}
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(5px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    /* Типографика контента */
+    .prose-custom h2 { color: white; font-size: 1.5em; margin-top: 1.5em; margin-bottom: 0.5em; font-weight: 600; }
+    .prose-custom h3 { color: #E8E0D5; font-size: 1.25em; margin-top: 1.2em; margin-bottom: 0.5em; font-weight: 500; }
+    .prose-custom p { color: #9CA3AF; line-height: 1.7; margin-bottom: 1em; }
+    .prose-custom ul { list-style: disc; padding-left: 1.2em; color: #9CA3AF; margin-bottom: 1em; }
+    .prose-custom li { margin-bottom: 0.3em; }
+    .prose-custom a { color: #C59D5F; text-decoration: underline; text-underline-offset: 4px; }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="min-h-screen bg-luxury-black pt-24 pb-12">
-    <div class="container mx-auto px-4">
+<!-- Основной контейнер -->
+<div class="min-h-screen bg-[#0F0D0B] pt-24 pb-20">
 
-        <!-- Breadcrumbs -->
-        <div class="mb-6 text-sm text-luxury-muted flex items-center gap-2">
-            <a href="{% url 'main:index' %}" class="hover:text-luxury-gold transition-colors">Главная</a>
-            <span>/</span>
-            <span class="text-luxury-gold">Мои курсы</span>
-            <span>/</span>
-            <span>SMM Revolution</span>
+    <!-- Фоновый амбиент (еле заметный) -->
+    <div class="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-b from-[#181614] to-transparent pointer-events-none z-0"></div>
+
+    <div class="container mx-auto px-4 max-w-[1600px] relative z-10">
+
+        <!-- Верхняя навигация (Хлебные крошки и Название курса) -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div class="flex items-center gap-2 text-xs md:text-sm text-luxury-muted">
+                <a href="{% url 'courses:my_courses' %}" class="hover:text-white transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    К списку курсов
+                </a>
+                <span class="text-white/20">|</span>
+                <span class="text-luxury-gold uppercase tracking-wider font-bold">{{ course.title }}</span>
+            </div>
+
+            <!-- Прогресс (Визуальный) -->
+            <div class="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                <span class="text-xs text-luxury-muted uppercase font-bold">Прогресс</span>
+                <div class="w-24 h-1.5 bg-black rounded-full overflow-hidden">
+                    <!-- Пример: 30% -->
+                    <div class="h-full bg-luxury-gold w-[30%] shadow-[0_0_10px_#C59D5F]"></div>
+                </div>
+                <span class="text-xs text-white font-mono">30%</span>
+            </div>
         </div>
 
-        <div class="grid lg:grid-cols-12 gap-8 items-start">
+        <div class="grid lg:grid-cols-12 gap-6 items-start">
 
-            <!-- SIDEBAR: Список уроков (Left Side) -->
-            <div class="lg:col-span-4 lg:order-1 order-2">
-                <div class="bg-luxury-card border border-white/5 overflow-hidden sticky top-24">
-                    <!-- Header Sidebar -->
-                    <div class="p-6 border-b border-white/5 bg-[#12100E]">
-                        <h3 class="text-xl font-bold text-white mb-1">Программа курса</h3>
-                        <div class="flex justify-between text-xs text-luxury-muted uppercase tracking-wider mt-2">
-                            <span>Прогресс</span>
-                            <span>15%</span>
+            <!-- ЛЕВАЯ КОЛОНКА: Плеер и Контент (Занимает 8-9 колонок) -->
+            <div class="lg:col-span-8 xl:col-span-9 space-y-6">
+
+                <!-- 1. VIDEO PLAYER WRAPPER -->
+                <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-white/10 cinema-glow group">
+                    {% if lesson.video_url %}
+                        <iframe class="w-full h-full"
+                                src="{{ lesson.video_url }}"
+                                title="{{ lesson.title }}"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    {% else %}
+                        <div class="w-full h-full flex flex-col items-center justify-center bg-[#141210]">
+                            <svg class="w-16 h-16 text-white/10 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            <p class="text-luxury-muted">В этом уроке нет видеоматериала</p>
                         </div>
-                        <!-- Progress Bar -->
-                        <div class="w-full h-1 bg-white/10 mt-2 rounded-full overflow-hidden">
-                            <div class="h-full bg-luxury-gold w-[15%]"></div>
-                        </div>
-                    </div>
-
-                    <!-- Lesson List -->
-                    <div class="lesson-list-scroll max-h-[600px] overflow-y-auto p-4 space-y-6">
-
-                        <!-- Module 1 -->
-                        <div>
-                            <h4 class="text-luxury-muted text-xs font-bold uppercase tracking-widest mb-3 pl-2">Модуль 1: Стратегия</h4>
-                            <div class="space-y-1">
-                                <!-- Active Lesson -->
-                                <a href="#" class="lesson-item active flex items-center gap-4 p-3 hover:bg-white/5 transition-colors rounded-r-md group">
-                                    <div class="w-6 h-6 rounded-full border border-luxury-gold flex items-center justify-center text-[10px] text-luxury-gold shrink-0">
-                                        ▶
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-medium text-white group-hover:text-luxury-gold transition-colors">1. Введение в SMM</p>
-                                        <span class="text-[10px] text-luxury-muted">15:00 мин</span>
-                                    </div>
-                                </a>
-
-                                <!-- Completed Lesson -->
-                                <a href="#" class="lesson-item flex items-center gap-4 p-3 hover:bg-white/5 transition-colors border-l-3 border-transparent rounded-r-md group opacity-70">
-                                    <div class="w-6 h-6 rounded-full bg-luxury-gold/20 text-luxury-gold flex items-center justify-center text-[10px] shrink-0">
-                                        ✓
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-medium text-white group-hover:text-luxury-gold transition-colors">2. Анализ ЦА</p>
-                                        <span class="text-[10px] text-luxury-muted">22:30 мин</span>
-                                    </div>
-                                </a>
-
-                                <!-- Locked Lesson -->
-                                <div class="lesson-item flex items-center gap-4 p-3 border-l-3 border-transparent rounded-r-md opacity-40 cursor-not-allowed">
-                                    <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-[10px] text-white shrink-0">
-                                        🔒
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-medium text-white">3. Распаковка личности</p>
-                                        <span class="text-[10px] text-luxury-muted">Доступно через 2 дня</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Module 2 -->
-                        <div>
-                            <h4 class="text-luxury-muted text-xs font-bold uppercase tracking-widest mb-3 pl-2">Модуль 2: Визуал</h4>
-                            <div class="space-y-1">
-                                <div class="lesson-item flex items-center gap-4 p-3 border-l-3 border-transparent rounded-r-md opacity-40 cursor-not-allowed">
-                                    <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-[10px] text-white shrink-0">
-                                        🔒
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-medium text-white">1. Основы композиции</p>
-                                        <span class="text-[10px] text-luxury-muted">Закрыто</span>
-                                    </div>
-                                </div>
-                                <div class="lesson-item flex items-center gap-4 p-3 border-l-3 border-transparent rounded-r-md opacity-40 cursor-not-allowed">
-                                    <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-[10px] text-white shrink-0">
-                                        🔒
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-medium text-white">2. Свет и оборудование</p>
-                                        <span class="text-[10px] text-luxury-muted">Закрыто</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- MAIN CONTENT: Видео и Материалы (Right Side) -->
-            <div class="lg:col-span-8 lg:order-2 order-1">
-
-                <!-- Video Player Container -->
-                <div class="relative w-full aspect-video bg-black border border-white/10 video-glow group overflow-hidden mb-8">
-                    <!-- Заглушка для видео (здесь будет iframe YouTube/Vimeo) -->
-                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=1&modestbranding=1&rel=0" title="Lesson Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    {% endif %}
                 </div>
 
-                <!-- Lesson Header -->
-                <div class="flex justify-between items-start mb-8 border-b border-white/5 pb-6">
-                    <div>
-                        <span class="text-luxury-gold text-xs font-bold uppercase tracking-widest mb-2 block">Модуль 1 • Урок 1</span>
-                        <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Введение в SMM и мышление креатора</h1>
-                    </div>
-                    <button class="hidden md:flex items-center gap-2 border border-white/10 hover:border-luxury-gold px-4 py-2 rounded-full transition-all text-sm text-luxury-muted hover:text-white">
-                        <span>Следующий урок</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
+                <!-- 2. HEADER & TABS -->
+                <div class="bg-[#141210] border border-white/5 rounded-xl p-6 md:p-8">
+                    <h1 class="text-2xl md:text-3xl font-bold text-white mb-6 font-montserrat">{{ lesson.title }}</h1>
 
-                <!-- Tabs Navigation -->
-                <div class="flex gap-8 border-b border-white/5 mb-8">
-                    <button class="tab-btn active pb-4 text-sm font-bold uppercase tracking-widest transition-colors hover:text-luxury-gold" onclick="openTab('lecture', this)">
-                        Конспект
-                    </button>
-                    <button class="tab-btn pb-4 text-sm font-bold uppercase tracking-widest text-luxury-muted transition-colors hover:text-luxury-gold" onclick="openTab('homework', this)">
-                        Задание
-                    </button>
-                    <button class="tab-btn pb-4 text-sm font-bold uppercase tracking-widest text-luxury-muted transition-colors hover:text-luxury-gold" onclick="openTab('files', this)">
-                        Файлы
-                    </button>
-                </div>
-
-                <!-- Tab: Lecture Notes -->
-                <div id="lecture" class="tab-content active text-luxury-text leading-relaxed space-y-6">
-                    <p class="text-lg font-light">
-                        В этом уроке мы разберем фундамент профессии. SMM — это не просто постинг картинок. Это управление вниманием аудитории.
-                    </p>
-                    <h3 class="text-xl font-bold text-white mt-8 mb-4">Основные тезисы:</h3>
-                    <ul class="list-disc pl-5 space-y-3 text-luxury-muted marker:text-luxury-gold">
-                        <li>Чем отличается SMM 2020 года от 2025 года.</li>
-                        <li>Роль искусственного интеллекта в создании контента.</li>
-                        <li>Почему "красивая картинка" больше не продает без смыслов.</li>
-                        <li>Психология пользователя: почему они покупают.</li>
-                    </ul>
-                    <div class="bg-luxury-card border-l-4 border-luxury-gold p-6 my-8">
-                        <p class="italic text-white">"Люди не покупают ваш продукт. Они покупают лучшую версию себя, которую этот продукт может им дать."</p>
-                    </div>
-                </div>
-
-                <!-- Tab: Homework -->
-                <div id="homework" class="tab-content">
-                    <div class="bg-luxury-card border border-white/10 p-8 rounded-sm">
-                        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-luxury-gold flex items-center justify-center text-black text-sm">✎</span>
+                    <!-- Tab Buttons -->
+                    <div class="flex gap-8 border-b border-white/10 mb-8 overflow-x-auto no-scrollbar">
+                        <button onclick="openTab(event, 'desc')" class="tab-btn active pb-4 text-sm font-bold uppercase tracking-widest text-white border-b-2 border-luxury-gold transition-all whitespace-nowrap">
+                            Описание
+                        </button>
+                        <button onclick="openTab(event, 'files')" class="tab-btn pb-4 text-sm font-bold uppercase tracking-widest text-luxury-muted hover:text-white border-b-2 border-transparent transition-all whitespace-nowrap">
+                            Материалы <span class="ml-1 text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-white">{{ lesson.files|length }}</span>
+                        </button>
+                        <button onclick="openTab(event, 'homework')" class="tab-btn pb-4 text-sm font-bold uppercase tracking-widest text-luxury-muted hover:text-white border-b-2 border-transparent transition-all whitespace-nowrap">
                             Домашнее задание
-                        </h3>
-                        <p class="text-luxury-muted mb-6">
-                            Для доступа к следующему уроку необходимо выполнить это задание. Я лично проверяю каждый отчет.
-                        </p>
-
-                        <div class="space-y-4 mb-8">
-                            <div class="flex items-start gap-3">
-                                <span class="text-luxury-gold font-bold">1.</span>
-                                <p class="text-sm">Проведите анализ 3-х конкурентов в вашей нише.</p>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <span class="text-luxury-gold font-bold">2.</span>
-                                <p class="text-sm">Выпишите 5 их сильных и 5 слабых сторон.</p>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <span class="text-luxury-gold font-bold">3.</span>
-                                <p class="text-sm">Сформулируйте свое УТП (Уникальное Торговое Предложение).</p>
-                            </div>
-                        </div>
-
-                        <form>
-                            <label class="block text-xs font-bold uppercase tracking-widest text-luxury-muted mb-2">Ваш ответ / Ссылка на Google Doc</label>
-                            <textarea class="w-full bg-black border border-white/10 p-4 text-white focus:border-luxury-gold focus:outline-none transition-colors rounded-sm mb-4" rows="4" placeholder="Вставьте ссылку или напишите ответ здесь..."></textarea>
-
-                            <button class="px-8 py-3 bg-luxury-gold hover:bg-white text-black font-bold uppercase tracking-widest text-sm transition-all w-full md:w-auto">
-                                Отправить на проверку
-                            </button>
-                        </form>
+                        </button>
                     </div>
+
+                    <!-- TAB CONTENT -->
+
+                    <!-- Описание -->
+                    <div id="desc" class="tab-pane active prose-custom">
+                        {% if lesson.content %}
+                            {{ lesson.content|safe }}
+                        {% else %}
+                            <p class="text-luxury-muted italic">Автор не добавил текстовое описание к этому уроку.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Файлы -->
+                    <div id="files" class="tab-pane">
+                        {% if lesson.files %}
+                            <div class="grid md:grid-cols-2 gap-4">
+                                {% for file in lesson.files %}
+                                <a href="{{ file.url }}" target="_blank" class="flex items-center gap-4 p-4 bg-[#1A1816] border border-white/5 hover:border-luxury-gold/50 rounded-lg group transition-all">
+                                    <div class="w-12 h-12 bg-black/50 rounded flex items-center justify-center text-luxury-gold group-hover:scale-110 transition-transform">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <p class="text-white font-medium truncate">{{ file.name }}</p>
+                                        <p class="text-xs text-luxury-muted uppercase tracking-wider mt-1 group-hover:text-luxury-gold transition-colors">Скачать файл</p>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-10 bg-[#1A1816] rounded-lg border border-white/5">
+                                <p class="text-luxury-muted">Нет прикрепленных файлов</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Домашка -->
+                    <div id="homework" class="tab-pane">
+                        <div class="bg-gradient-to-r from-[#1A1816] to-[#141210] border border-luxury-gold/20 p-6 rounded-lg relative overflow-hidden">
+                            <!-- Декор -->
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-luxury-gold/5 rounded-full blur-2xl pointer-events-none"></div>
+
+                            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                Ваше задание
+                            </h3>
+
+                            <div class="prose-custom mb-6 text-sm">
+                                <p>1. Изучите материал урока.</p>
+                                <p>2. Прикрепите ссылку на выполненную работу в Google Docs.</p>
+                            </div>
+
+                            <form action="" method="post" class="relative z-10">
+                                {% csrf_token %}
+                                <textarea class="w-full bg-black/50 border border-white/10 rounded-lg p-4 text-white placeholder-white/20 focus:border-luxury-gold focus:outline-none transition-colors mb-4" rows="3" placeholder="Вставьте ссылку на задание или напишите ответ..."></textarea>
+                                <button type="submit" class="px-8 py-3 bg-luxury-gold text-black font-bold uppercase text-xs tracking-widest hover:bg-white transition-all rounded shadow-[0_0_15px_rgba(197,157,95,0.2)]">
+                                    Отправить на проверку
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!-- Tab: Files -->
-                <div id="files" class="tab-content">
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <a href="#" class="flex items-center gap-4 p-4 bg-luxury-card border border-white/10 hover:border-luxury-gold transition-all group">
-                            <div class="w-10 h-10 bg-white/5 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-black transition-colors">
-                                PDF
+                <!-- Кнопки навигации (Мобильные + Десктоп) -->
+                <div class="flex justify-between items-center pt-4">
+                    {% if prev_lesson %}
+                        <a href="{% url 'main:lesson_detail' course.slug prev_lesson.slug %}" class="flex items-center gap-2 text-luxury-muted hover:text-white transition-colors group">
+                            <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-luxury-gold transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </div>
-                            <div>
-                                <p class="text-white font-medium text-sm">Презентация урока</p>
-                                <span class="text-xs text-luxury-muted">2.4 MB</span>
+                            <span class="text-sm font-medium hidden md:block">Предыдущий урок</span>
+                        </a>
+                    {% else %}
+                        <div></div>
+                    {% endif %}
+
+                    {% if next_lesson %}
+                        <a href="{% url 'main:lesson_detail' course.slug next_lesson.slug %}" class="flex items-center gap-2 text-white hover:text-luxury-gold transition-colors group">
+                            <span class="text-sm font-medium hidden md:block">Следующий урок</span>
+                            <div class="w-10 h-10 rounded-full bg-luxury-gold text-black flex items-center justify-center group-hover:bg-white transition-colors shadow-lg">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </div>
                         </a>
-                        <a href="#" class="flex items-center gap-4 p-4 bg-luxury-card border border-white/10 hover:border-luxury-gold transition-all group">
-                            <div class="w-10 h-10 bg-white/5 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-black transition-colors">
-                                DOC
-                            </div>
-                            <div>
-                                <p class="text-white font-medium text-sm">Шаблон анализа конкурентов</p>
-                                <span class="text-xs text-luxury-muted">150 KB</span>
-                            </div>
-                        </a>
-                    </div>
+                    {% endif %}
                 </div>
 
             </div>
+
+            <!-- ПРАВАЯ КОЛОНКА: Плейлист уроков (3-4 колонки) -->
+            <div class="lg:col-span-4 xl:col-span-3">
+                <div class="bg-[#141210] border border-white/5 rounded-xl overflow-hidden sticky top-24">
+                    <div class="p-5 border-b border-white/5 bg-[#1A1816]">
+                        <h4 class="text-white font-bold text-sm uppercase tracking-widest">Содержание курса</h4>
+                    </div>
+
+                    <div class="playlist-scroll max-h-[calc(100vh-200px)] overflow-y-auto">
+                        {% for l in lessons %}
+                        <a href="{% url 'main:lesson_detail' course.slug l.slug %}"
+                           class="lesson-row block border-l-[3px] border-transparent hover:bg-white/5 transition-all p-4 group {% if l.id == lesson.id %}active{% endif %}">
+
+                            <div class="flex items-start gap-3">
+                                <!-- Номер или Иконка -->
+                                <div class="mt-0.5 shrink-0 relative w-5 h-5 flex items-center justify-center">
+                                    {% if l.id == lesson.id %}
+                                        <!-- Пульсирующая точка для активного -->
+                                        <span class="relative flex h-3 w-3">
+                                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-luxury-gold opacity-75"></span>
+                                          <span class="relative inline-flex rounded-full h-3 w-3 bg-luxury-gold"></span>
+                                        </span>
+                                    {% else %}
+                                        <span class="text-luxury-muted text-xs font-mono group-hover:text-white">{{ l.order }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <h5 class="lesson-title text-sm font-medium text-white/80 group-hover:text-white transition-colors line-clamp-2">
+                                        {{ l.title }}
+                                    </h5>
+                                    <div class="flex items-center gap-2 mt-1.5">
+                                        {% if l.duration %}
+                                            <span class="text-[10px] text-white/30 bg-white/5 px-1.5 rounded flex items-center gap-1">
+                                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                {{ l.duration }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -276,25 +283,25 @@
 
 {% block extra_js %}
 <script>
-    // Логика переключения табов
-    function openTab(tabId, btnElement) {
-        // Скрыть все табы
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
+    function openTab(evt, tabName) {
+        // 1. Скрыть весь контент
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-pane");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].classList.remove("active");
+        }
 
-        // Убрать активность кнопок
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-            btn.classList.add('text-luxury-muted');
-        });
+        // 2. Сбросить стили кнопок
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("text-white", "border-luxury-gold");
+            tablinks[i].classList.add("text-luxury-muted", "border-transparent");
+        }
 
-        // Показать нужный таб
-        document.getElementById(tabId).classList.add('active');
-
-        // Активировать кнопку
-        btnElement.classList.add('active');
-        btnElement.classList.remove('text-luxury-muted');
+        // 3. Показать текущий и активировать кнопку
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.remove("text-luxury-muted", "border-transparent");
+        evt.currentTarget.classList.add("text-white", "border-luxury-gold");
     }
 </script>
 {% endblock %}

@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     
     'apps.main',
     'apps.courses',
+    'apps.users'
 ]
 
 MIDDLEWARE = [
@@ -118,8 +119,6 @@ STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -151,3 +150,43 @@ LOGGING = {
         },
     },
 }
+
+
+# URL для авторизации
+AUTH_USER_MODEL = 'users.User'
+
+# URL авторизации
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'users:profile'
+LOGOUT_REDIRECT_URL = 'main:index'
+
+
+# =============================================================================
+# LIQPAY SETTINGS
+# =============================================================================
+
+LIQPAY_PUBLIC_KEY = os.getenv('LIQPAY_PUBLIC_KEY', '')
+LIQPAY_PRIVATE_KEY = os.getenv('LIQPAY_PRIVATE_KEY', '')
+
+# =============================================================================
+# CSRF SETTINGS
+# =============================================================================
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://www.liqpay.ua',
+    'https://liqpay.ua',
+]
+
+# Для локальной разработки с ngrok:
+# CSRF_TRUSTED_ORIGINS += ['https://your-ngrok-url.ngrok.io']
+
+# =============================================================================
+# SECURITY SETTINGS (для продакшена - раскомментируйте)
+# =============================================================================
+
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = 'DENY'

@@ -1,0 +1,132 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Вход | Sofia SMM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .input-glow:focus {
+        box-shadow: 0 0 20px rgba(197, 157, 95, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen bg-luxury-black pt-24 pb-12 flex items-center">
+    <div class="container mx-auto px-4">
+        <div class="max-w-md mx-auto">
+
+            <!-- Заголовок -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-white mb-3">Вход</h1>
+                <p class="text-luxury-muted">Войдите в свой аккаунт</p>
+            </div>
+
+            <!-- Форма входа -->
+            <div class="bg-luxury-card border border-white/5 p-8">
+
+                <!-- Сообщения -->
+                {% if messages %}
+                    <div class="mb-6 space-y-2">
+                        {% for message in messages %}
+                            {% if message.tags == 'error' %}
+                                <div class="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-sm text-sm">
+                                    {{ message }}
+                                </div>
+                            {% elif message.tags == 'success' %}
+                                <div class="bg-green-500/10 border border-green-500/30 text-green-400 px-4 py-3 rounded-sm text-sm">
+                                    {{ message }}
+                                </div>
+                            {% else %}
+                                <div class="bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-3 rounded-sm text-sm">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="POST" class="space-y-6">
+                    {% csrf_token %}
+
+                    <!-- Hidden next field -->
+                    {% if request.GET.next %}
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    {% endif %}
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-luxury-muted text-sm font-medium mb-2">
+                            Email <span class="text-luxury-gold">*</span>
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <p class="text-red-400 text-xs mt-1">{{ form.username.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Пароль -->
+                    <div>
+                        <label class="block text-luxury-muted text-sm font-medium mb-2">
+                            Пароль <span class="text-luxury-gold">*</span>
+                        </label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <p class="text-red-400 text-xs mt-1">{{ form.password.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Запомнить меня -->
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="flex items-center text-luxury-muted cursor-pointer">
+                            <input type="checkbox" name="remember" class="mr-2 rounded">
+                            Запомнить меня
+                        </label>
+                    </div>
+
+                    <!-- Кнопка входа -->
+                    <button
+                        type="submit"
+                        class="w-full bg-luxury-gold hover:bg-white text-black font-bold py-4 uppercase tracking-widest text-sm transition-all duration-300"
+                    >
+                        Войти
+                    </button>
+
+                </form>
+
+                <!-- Разделитель -->
+                <div class="relative my-8">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-white/10"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-luxury-card text-luxury-muted">или</span>
+                    </div>
+                </div>
+
+                <!-- Ссылка на регистрацию -->
+                <div class="text-center">
+                    <p class="text-luxury-muted text-sm">
+                        Нет аккаунта?
+                        <a href="{% url 'users:register' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="text-luxury-gold hover:text-white transition-colors font-medium">
+                            Зарегистрироваться
+                        </a>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Дополнительная информация -->
+            <div class="mt-6 text-center">
+                <p class="text-luxury-muted text-xs">
+                    Проблемы со входом?
+                    <a href="{% url 'main:index' %}#contact" class="text-luxury-gold hover:underline">Свяжитесь с нами</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

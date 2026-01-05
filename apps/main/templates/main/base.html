@@ -18,12 +18,12 @@
             theme: {
                 extend: {
                     colors: {
-                        'luxury-black': '#0F0D0B',     // Основной фон
-                        'luxury-card': '#181614',      // Фон карточек
-                        'luxury-gold': '#C59D5F',      // Золотой акцент
-                        'luxury-text': '#E8E0D5',      // Молочный текст
-                        'luxury-muted': '#9CA3AF',     // Серый текст
-                        'luxury-dark-gold': '#8a6d3b'  // Темное золото
+                        'luxury-black': '#0F0D0B',
+                        'luxury-card': '#181614',
+                        'luxury-gold': '#C59D5F',
+                        'luxury-text': '#E8E0D5',
+                        'luxury-muted': '#9CA3AF',
+                        'luxury-dark-gold': '#8a6d3b'
                     },
                     fontFamily: {
                         'montserrat': ['Montserrat', 'sans-serif']
@@ -45,13 +45,11 @@
             scroll-behavior: smooth;
         }
 
-        /* Кастомный скроллбар */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0F0D0B; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #C59D5F; }
 
-        /* Анимация подчеркивания ссылок */
         .link-hover {
             position: relative;
         }
@@ -82,9 +80,24 @@
                 SOFIA<span class="text-luxury-gold">.SMM</span>
             </a>
 
-            <!-- Burger Button -->
-            <div class="relative">
-                <button id="burger-btn" class="text-luxury-text hover:text-luxury-gold p-2 rounded-md transition-colors z-60">
+            <!-- User Info + Burger -->
+            <div class="flex items-center gap-4">
+                <!-- User Info (если авторизован) -->
+                {% if user.is_authenticated %}
+                    <a href="{% url 'users:profile' %}" class="hidden md:flex items-center gap-2 text-luxury-muted hover:text-luxury-gold transition-colors">
+                        <div class="w-8 h-8 rounded-full bg-luxury-gold/20 border border-luxury-gold flex items-center justify-center">
+                            <span class="text-xs font-bold text-luxury-gold">{{ user.first_name.0|default:user.username.0|upper }}</span>
+                        </div>
+                        <span class="text-sm">{{ user.first_name|default:user.username }}</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="hidden md:block text-luxury-muted hover:text-luxury-gold transition-colors text-sm font-medium">
+                        Войти
+                    </a>
+                {% endif %}
+
+                <!-- Burger Button -->
+                <button id="burger-btn" class="text-luxury-text hover:text-luxury-gold p-2 rounded-md transition-colors">
                     <svg id="menu-icon" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -93,7 +106,7 @@
         </div>
     </header>
 
-    <!-- Slide-out Menu (Global) -->
+    <!-- Slide-out Menu -->
     <div id="menu-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 opacity-0 invisible transition-all duration-300"></div>
 
     <div id="slide-menu" class="fixed top-0 right-0 h-full w-80 bg-luxury-card z-50 transform translate-x-full transition-transform duration-300 ease-in-out border-l border-white/5">
@@ -107,23 +120,54 @@
                 </button>
             </div>
 
+            <!-- User Info в меню (мобильная версия) -->
+            {% if user.is_authenticated %}
+                <div class="p-6 border-b border-white/5">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-full bg-luxury-gold/20 border-2 border-luxury-gold flex items-center justify-center">
+                            <span class="text-lg font-bold text-luxury-gold">{{ user.first_name.0|default:user.username.0|upper }}</span>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">{{ user.first_name|default:user.username }}</p>
+                            <p class="text-luxury-muted text-xs">{{ user.email }}</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'users:profile' %}" onclick="toggleMenu()" class="block w-full text-center bg-luxury-gold hover:bg-white text-black px-4 py-2 rounded-sm transition-all uppercase tracking-widest text-xs font-bold">
+                        Мой профиль
+                    </a>
+                </div>
+            {% endif %}
+
             <!-- Navigation Links -->
             <nav class="flex-1 p-6 space-y-2">
-                {# Здесь можно использовать Django URL теги #}
                 <a href="/#about" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Обо мне</a>
                 <a href="/#services" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Услуги</a>
-                <a href="/#cases" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Кейсы</a>
-                <!-- Ссылка на курс (если это основной сайт) -->
-                <a href="https://course.sofia-smm.com" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium border border-luxury-gold/30 mt-4">Обучение</a>
+                <a href="{% url 'main:cases' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Кейсы</a>
+                <a href="{% url 'main:reviews' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Отзывы</a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'courses:my_courses' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium border border-luxury-gold/30 mt-4">Мои курсы</a>
+                {% endif %}
+
                 <a href="/#contact" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Контакты</a>
             </nav>
 
-            <!-- Menu Footer Contacts -->
+            <!-- Menu Footer -->
             <div class="p-6 border-t border-white/5">
-                <div class="flex justify-center space-x-6 text-luxury-muted">
-                    <a href="#" class="hover:text-luxury-gold transition-colors"><span class="sr-only">Instagram</span>IG</a>
-                    <a href="#" class="hover:text-luxury-gold transition-colors"><span class="sr-only">Telegram</span>TG</a>
-                </div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'users:logout' %}" class="block w-full text-center bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">
+                        Выйти
+                    </a>
+                {% else %}
+                    <div class="space-y-2">
+                        <a href="{% url 'users:login' %}" onclick="toggleMenu()" class="block w-full text-center border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">
+                            Войти
+                        </a>
+                        <a href="{% url 'users:register' %}" onclick="toggleMenu()" class="block w-full text-center bg-luxury-gold hover:bg-white text-black px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">
+                            Регистрация
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -175,7 +219,6 @@
                     target.scrollIntoView({
                         behavior: 'smooth'
                     });
-                    // Close menu if open
                     if (!slideMenu.classList.contains('translate-x-full')) {
                         toggleMenu();
                     }

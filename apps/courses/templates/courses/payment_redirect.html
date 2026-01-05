@@ -1,0 +1,89 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Переход к оплате | Sofia SMM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .spinner {
+        border: 3px solid rgba(197, 157, 95, 0.1);
+        border-top: 3px solid #C59D5F;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen bg-luxury-black flex items-center justify-center">
+    <div class="container mx-auto px-4 max-w-2xl text-center">
+        
+        <div class="bg-luxury-card border border-white/5 p-12">
+            <!-- Spinner -->
+            <div class="flex justify-center mb-8">
+                <div class="spinner"></div>
+            </div>
+            
+            <h1 class="text-3xl font-bold text-white mb-4">
+                Переход к оплате
+            </h1>
+            
+            <p class="text-luxury-muted mb-8">
+                Сейчас вы будете перенаправлены на защищенную страницу оплаты LiqPay
+            </p>
+            
+            <div class="bg-luxury-black border border-white/10 p-6 text-left mb-8">
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="text-luxury-muted">Курс:</div>
+                    <div class="text-white font-medium">{{ course.title }}</div>
+                    
+                    <div class="text-luxury-muted">Сумма:</div>
+                    <div class="text-luxury-gold font-bold">{{ course.price }} {{ course.currency }}</div>
+                    
+                    <div class="text-luxury-muted">Заказ:</div>
+                    <div class="text-white font-mono text-xs">{{ order_id }}</div>
+                </div>
+            </div>
+
+            <p class="text-luxury-muted text-sm">
+                Если переадресация не произошла автоматически, нажмите кнопку ниже
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Автоматическая отправка формы LiqPay -->
+<form id="liqpay-form" method="POST" action="{{ liqpay_api_url }}" style="display: none;">
+    <input type="hidden" name="data" value="{{ payment_data.data }}">
+    <input type="hidden" name="signature" value="{{ payment_data.signature }}">
+    <button type="submit" id="liqpay-submit">Перейти к оплате</button>
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Автоматическая отправка формы через 1 секунду
+    setTimeout(function() {
+        document.getElementById('liqpay-form').submit();
+    }, 1000);
+    
+    // Если что-то пошло не так - показываем кнопку
+    setTimeout(function() {
+        const form = document.getElementById('liqpay-form');
+        if (form) {
+            form.style.display = 'block';
+            form.querySelector('button').className = 'px-8 py-3 bg-luxury-gold hover:bg-white text-black font-bold uppercase tracking-widest text-sm transition-all';
+        }
+    }, 5000);
+</script>
+{% endblock %}
