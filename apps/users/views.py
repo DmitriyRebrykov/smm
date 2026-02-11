@@ -13,13 +13,10 @@ from .forms import (
 )
 from apps.courses.models import CourseAccess, Purchase
 
-import logging
 
-logger = logging.getLogger(__name__)
 
 @require_http_methods(["GET", "POST"])
 def register_view(request):
-    """Регистрация нового пользователя"""
 
     if request.user.is_authenticated:
         return redirect('users:profile')
@@ -31,14 +28,11 @@ def register_view(request):
             user = form.save()
             login(request, user)
 
-            logger.info(f"Зарегистрирован новый пользователь: {user.email}")
             messages.success(request, f'Добро пожаловать, {user.first_name}!')
 
-            # Редирект на страницу, откуда пришли
             next_url = request.GET.get('next', 'users:profile')
             return redirect(next_url)
         else:
-            # Показываем ошибки формы
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, error)
@@ -50,7 +44,6 @@ def register_view(request):
 
 @require_http_methods(["GET", "POST"])
 def login_view(request):
-    """Вход пользователя"""
 
     if request.user.is_authenticated:
         return redirect('users:profile')
@@ -62,10 +55,8 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
 
-            logger.info(f"Пользователь вошел: {user.email}")
             messages.success(request, f'Добро пожаловать, {user.get_short_name()}!')
 
-            # Редирект на страницу, откуда пришли
             next_url = request.GET.get('next') or request.POST.get('next', 'users:profile')
             return redirect(next_url)
         else:
@@ -77,7 +68,6 @@ def login_view(request):
 
 
 def logout_view(request):
-    """Выход пользователя"""
     logout(request)
     messages.info(request, 'Вы успешно вышли из системы')
     return redirect('main:index')
@@ -85,9 +75,6 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    """Личный кабинет пользователя"""
-
-    # Получаем курсы пользователя
     accesses = CourseAccess.objects.filter(
         user=request.user,
         is_active=True
@@ -97,7 +84,6 @@ def profile_view(request):
         user=request.user
     ).select_related('course').order_by('-created_at')[:10]
 
-    # Проверяем существование профиля
     from .models import UserProfile
     profile, created = UserProfile.objects.get_or_create(user=request.user)
 
@@ -113,9 +99,6 @@ def profile_view(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 def profile_edit_view(request):
-    """Редактирование профиля"""
-
-    # Получаем или создаем профиль
     from .models import UserProfile
     profile, created = UserProfile.objects.get_or_create(user=request.user)
 
@@ -146,8 +129,6 @@ def profile_edit_view(request):
 
 @login_required
 def my_courses_view(request):
-    """Мои курсы"""
-
     accesses = CourseAccess.objects.filter(
         user=request.user,
         is_active=True
@@ -160,8 +141,6 @@ def my_courses_view(request):
 
 @login_required
 def purchases_history_view(request):
-    """История покупок"""
-
     purchases = Purchase.objects.filter(
         user=request.user
     ).select_related('course').order_by('-created_at')

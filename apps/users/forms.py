@@ -5,7 +5,6 @@ from .models import User, UserProfile
 
 
 class CustomUserCreationForm(UserCreationForm):
-    """Форма регистрации пользователя"""
 
     first_name = forms.CharField(
         max_length=150,
@@ -64,7 +63,6 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomAuthenticationForm(AuthenticationForm):
-    """Форма входа"""
 
     username = forms.EmailField(
         label='Email',
@@ -85,7 +83,6 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
-    """Форма обновления профиля пользователя"""
 
     class Meta:
         model = User
@@ -110,7 +107,6 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class UserProfileUpdateForm(forms.ModelForm):
-    """Форма обновления расширенного профиля"""
 
     class Meta:
         model = UserProfile

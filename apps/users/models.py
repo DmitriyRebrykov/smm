@@ -4,12 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
-    """
-    Кастомная модель пользователя
-    Расширяет стандартную Django User модель
-    """
-
-    # Переопределяем email как обязательное и уникальное поле
     email = models.EmailField(
         _('email address'),
         unique=True,
@@ -18,7 +12,6 @@ class User(AbstractUser):
         }
     )
 
-    # Дополнительные поля
     phone = models.CharField(
         'Телефон',
         max_length=20,
@@ -39,18 +32,15 @@ class User(AbstractUser):
         max_length=500
     )
 
-    # Уведомления
     email_notifications = models.BooleanField(
         'Email уведомления',
         default=True,
         help_text='Получать уведомления на email'
     )
 
-    # Метаданные
     created_at = models.DateTimeField('Дата регистрации', auto_now_add=True)
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
-    # Используем email для входа вместо username
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name']
 
@@ -63,27 +53,19 @@ class User(AbstractUser):
         return self.email
 
     def get_full_name(self):
-        """Возвращает полное имя пользователя"""
         full_name = f"{self.first_name} {self.last_name}".strip()
         return full_name or self.username
 
     def get_short_name(self):
-        """Возвращает короткое имя"""
         return self.first_name or self.username
 
     def get_initials(self):
-        """Возвращает инициалы для аватара"""
         if self.first_name:
             return self.first_name[0].upper()
         return self.email[0].upper()
 
 
 class UserProfile(models.Model):
-    """
-    Расширенный профиль пользователя
-    Хранит дополнительную информацию
-    """
-
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -91,7 +73,6 @@ class UserProfile(models.Model):
         verbose_name='Пользователь'
     )
 
-    # Профессиональная информация
     occupation = models.CharField(
         'Род деятельности',
         max_length=100,
@@ -109,7 +90,6 @@ class UserProfile(models.Model):
         blank=True
     )
 
-    # Социальные сети
     instagram = models.CharField(
         'Instagram',
         max_length=100,
@@ -129,7 +109,6 @@ class UserProfile(models.Model):
         blank=True
     )
 
-    # Настройки обучения
     learning_goal = models.TextField(
         'Цель обучения',
         blank=True,
@@ -148,7 +127,6 @@ class UserProfile(models.Model):
         default='beginner'
     )
 
-    # Метаданные
     created_at = models.DateTimeField('Создан', auto_now_add=True)
     updated_at = models.DateTimeField('Обновлен', auto_now=True)
 

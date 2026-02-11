@@ -9,7 +9,6 @@ class ContactRequestAdmin(admin.ModelAdmin):
     search_fields = ('name', 'email', 'message')
     readonly_fields = ('created_at', 'updated_at', 'telegram_sent', 'telegram_message_id')
     
-    # Упрощенная версия без fieldsets для избежания проблем с Python 3.14
     fields = (
         'name', 'email', 'service', 'message', 'status',
         'created_at', 'updated_at', 'telegram_sent', 'telegram_message_id'

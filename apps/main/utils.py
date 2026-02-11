@@ -1,25 +1,16 @@
 import os
 import requests
 from django.conf import settings
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 def send_telegram_notification(contact_request):
-    """
-    Отправляет уведомление о новой заявке в Telegram (синхронная версия)
-    """
     try:
         bot_token = settings.TELEGRAM_BOT_TOKEN
         chat_id = settings.TELEGRAM_CHAT_ID
         
-        # Проверка наличия токена и chat_id
         if not bot_token or not chat_id:
-            logger.error("TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID не настроены")
             return False
         
-        # Форматирование сообщения
         service_display = dict(contact_request.SERVICE_CHOICES).get(
             contact_request.service, 
             'Не указана'
@@ -39,17 +30,14 @@ def send_telegram_notification(contact_request):
 🆔 <b>ID заявки:</b> #{contact_request.id}
         """.strip()
         
-        # URL для API Telegram
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
         
-        # Параметры запроса
         payload = {
             'chat_id': chat_id,
             'text': message,
             'parse_mode': 'HTML'
         }
         
-        # Отправка запроса
         response = requests.post(url, data=payload, timeout=10)
         
         if response.status_code == 200:
@@ -60,31 +48,22 @@ def send_telegram_notification(contact_request):
                 contact_request.telegram_message_id = result['result']['message_id']
                 contact_request.save()
                 
-                logger.info(f"Уведомление отправлено для заявки #{contact_request.id}")
                 return True
             else:
-                logger.error(f"Telegram API вернул ошибку: {result}")
                 return False
         else:
-            logger.error(f"Ошибка HTTP {response.status_code}: {response.text}")
             return False
         
     except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка запроса к Telegram API: {e}")
         return False
     except Exception as e:
-        logger.error(f"Неожиданная ошибка при отправке в Telegram: {e}")
         return False
 
 
-# Для совместимости - если где-то используется старое название
 send_telegram_notification_sync = send_telegram_notification
 
 
 def test_telegram_connection():
-    """
-    Тестирует подключение к Telegram боту
-    """
     try:
         bot_token = settings.TELEGRAM_BOT_TOKEN
         

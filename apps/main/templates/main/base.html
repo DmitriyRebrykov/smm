@@ -142,9 +142,7 @@
             <nav class="flex-1 p-6 space-y-2">
                 <a href="/#about" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Обо мне</a>
                 <a href="/#services" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Услуги</a>
-                <a href="{% url 'main:cases' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Кейсы</a>
-                <a href="{% url 'main:reviews' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Отзывы</a>
-
+                <a href="{% url 'courses:course_catalog' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Курсы</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'courses:my_courses' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium border border-luxury-gold/30 mt-4">Мои курсы</a>
                 {% endif %}
@@ -180,7 +178,7 @@
     <!-- Footer -->
     <footer class="bg-luxury-black border-t border-white/5 py-8 text-center mt-auto">
         <div class="container mx-auto px-4">
-            <p class="text-luxury-muted text-sm">© 2025 Shliaptseva Sofia. All rights reserved.</p>
+            <p class="text-luxury-muted text-sm">© 2026 Shliaptseva Sofia. All rights reserved.</p>
         </div>
     </footer>
 

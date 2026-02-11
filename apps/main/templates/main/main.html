@@ -5,19 +5,12 @@
 
 {% block extra_css %}
 <style>
-    /*
-       Эффект "Органических колец" (как на фото).
-       Используем border + box-shadow вместо фона, чтобы получить эффект "трубки" или "неона".
-    */
     .organic-ring {
         position: absolute;
         background: transparent;
-        border: 10px solid rgba(197, 157, 95, 0.95); /* Яркая золотая граница */
+        border: 10px solid rgba(197, 157, 95, 0.95);
 
-        /* Сложный радиус для кривой формы */
         border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-
-        /* Свечение наружу и внутрь */
         box-shadow:
             0 0 40px rgba(197, 157, 95, 0.6),       /* Внешнее свечение */
             inset 0 0 40px rgba(197, 157, 95, 0.6); /* Внутреннее свечение */
@@ -29,7 +22,6 @@
         transform: rotate(-15deg);
     }
 
-    /* Медленное плавание колец */
     @keyframes float-slow {
         0% { transform: translate(0, 0) rotate(-15deg); }
         50% { transform: translate(-15px, 15px) rotate(-10deg); }
@@ -40,7 +32,6 @@
         animation: float-slow 12s ease-in-out infinite;
     }
 
-    /* Бегущая строка */
     .scrolling-banner {
         background: linear-gradient(90deg, #181614, #0F0D0B);
         border-top: 1px solid rgba(197, 157, 95, 0.2);
@@ -48,12 +39,23 @@
         overflow: hidden;
         white-space: nowrap;
         position: relative;
+        display: flex;
     }
 
     .scrolling-text {
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding-right: 1rem;
+
         animation: scroll-infinite 30s linear infinite;
         color: #C59D5F;
+    }
+
+    @keyframes scroll-infinite {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
     }
 
     @keyframes scroll-infinite {
@@ -65,41 +67,31 @@
 
 {% block content %}
 
-<!-- Hero Section (Новый дизайн с яркими кольцами) -->
 <section class="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-[#12100E]">
 
-    <!-- ФОНОВЫЕ КОЛЬЦА -->
-    <!-- Левое нижнее кольцо (большое) -->
     <div class="organic-ring w-[600px] h-[600px] md:w-[800px] md:h-[800px] -bottom-[25%] -left-[15%] animate-float"></div>
 
-    <!-- Правое верхнее кольцо (поменьше) -->
     <div class="organic-ring w-[500px] h-[500px] md:w-[700px] md:h-[700px] -top-[25%] -right-[15%] animate-float"
          style="animation-delay: -5s; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;"></div>
 
-    <!-- Текстура шума (опционально, для стиля) -->
     <div class="absolute inset-0 bg-black opacity-[0.03] pointer-events-none"></div>
 
-    <!-- ЦЕНТРАЛЬНЫЙ ТЕКСТ -->
     <div class="relative z-10 text-center px-4 w-full max-w-5xl">
         <h1 class="text-white text-3xl md:text-5xl font-bold font-montserrat tracking-wide leading-tight drop-shadow-2xl">
             SMM portfolio by Shliaptseva Sofia
         </h1>
     </div>
 
-    <!-- НИЖНИЕ ССЫЛКИ -->
     <div class="absolute bottom-16 w-full px-4 z-10">
         <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-20 text-center">
 
-            <!-- Instagram -->
             <a href="https://instagram.com/shliaptsevasofia" target="_blank" class="group block">
                 <p class="text-white text-base md:text-lg mb-2 group-hover:text-[#C59D5F] transition-colors font-medium">
                     Inst : shliaptsevasofia
                 </p>
-                <!-- Белая линия -->
                 <div class="w-full h-[1px] bg-white/80 group-hover:bg-[#C59D5F] transition-colors duration-300 shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
             </a>
 
-            <!-- Telegram -->
             <a href="https://t.me/shliaptsevasofia" target="_blank" class="group block">
                 <p class="text-white text-base md:text-lg mb-2 group-hover:text-[#C59D5F] transition-colors font-medium">
                     Tg : shliaptsevasofia
@@ -107,7 +99,6 @@
                 <div class="w-full h-[1px] bg-white/80 group-hover:bg-[#C59D5F] transition-colors duration-300 shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
             </a>
 
-            <!-- Phone -->
             <a href="tel:0993257328" class="group block">
                 <p class="text-white text-base md:text-lg mb-2 group-hover:text-[#C59D5F] transition-colors font-medium">
                     Phone : 0993257328
@@ -119,10 +110,12 @@
     </div>
 </section>
 
-<!-- Бегущая строка -->
 <div class="scrolling-banner py-4 text-luxury-gold font-medium text-lg tracking-widest">
     <div class="scrolling-text">
-        SMM STRATEGY • AI CONTENT • TARGETING • ANALYTICS • DESIGN • CONSULTING • SMM STRATEGY • AI CONTENT • TARGETING • ANALYTICS •
+        SMM STRATEGY • AI CONTENT • TARGETING • ANALYTICS • DESIGN • CONSULTING •
+    </div>
+    <div class="scrolling-text">
+        SMM STRATEGY • AI CONTENT • TARGETING • ANALYTICS • DESIGN • CONSULTING •
     </div>
 </div>
 
@@ -475,10 +468,42 @@
     const contactForm = document.getElementById('contact-form');
     if(contactForm){
         contactForm.addEventListener('submit', function(e){
-            e.preventDefault();
-            // Здесь можно добавить AJAX запрос к Django view
-            alert('Спасибо! Заявка отправлена.');
-            this.reset();
+            e.preventDefault(); // Останавливаем стандартную перезагрузку страницы
+
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+
+            // Визуально показываем процесс загрузки
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Отправка...';
+
+            // Укажите здесь URL, который вы настроите в urls.py (см. шаг 2)
+            fetch('/submit-contact/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message); // Сообщение из views.py
+                    this.reset(); // Очистить форму
+                } else {
+                    alert('Ошибка: ' + (data.error || 'Что-то пошло не так'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка соединения с сервером.');
+            })
+            .finally(() => {
+                // Возвращаем кнопку в исходное состояние
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+            });
         });
     }
 </script>
