@@ -425,7 +425,6 @@
 
 {% block extra_js %}
 <script>
-    // Скрипт карусели
     const photos = [
         'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
         'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
@@ -434,7 +433,6 @@
     let currentPhotoIndex = 0;
     const imgElement = document.getElementById('carousel-image');
 
-    // Init
     if(imgElement) imgElement.src = photos[0];
 
     function nextPhoto() {
@@ -448,7 +446,6 @@
         imgElement.src = photos[currentPhotoIndex];
     }
 
-    // FAQ Аккордеон
     function toggleFAQ(button) {
         const content = button.nextElementSibling;
         const icon = button.querySelector('.faq-icon');
@@ -464,21 +461,18 @@
         }
     }
 
-    // Форма
     const contactForm = document.getElementById('contact-form');
     if(contactForm){
         contactForm.addEventListener('submit', function(e){
-            e.preventDefault(); // Останавливаем стандартную перезагрузку страницы
+            e.preventDefault();
 
             const formData = new FormData(this);
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerText;
 
-            // Визуально показываем процесс загрузки
             submitBtn.disabled = true;
             submitBtn.innerText = 'Отправка...';
 
-            // Укажите здесь URL, который вы настроите в urls.py (см. шаг 2)
             fetch('/submit-contact/', {
                 method: 'POST',
                 body: formData,
@@ -500,7 +494,6 @@
                 alert('Ошибка соединения с сервером.');
             })
             .finally(() => {
-                // Возвращаем кнопку в исходное состояние
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalBtnText;
             });
