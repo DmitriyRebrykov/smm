@@ -17,22 +17,32 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def courses_catalog(request):
+    courses = Course.objects.filter(is_active=True).order_by('-created_at')
+
+    purchased_ids = []
+    if request.user.is_authenticated:
+        purchased_ids = CourseAccess.objects.filter(
+            user=request.user,
+            is_active=True
+        ).values_list('course_id', flat=True)
+
+    context = {
+        'courses': courses,
+        'purchased_ids': purchased_ids,
+    }
+    return render(request, 'courses/course_catalog.html', context)
+
 @login_required
 def course_detail(request, slug):
-    """
-    Главная страница курса
-    Показывает форму оплаты если нет доступа, иначе уроки
-    """
     course = get_object_or_404(Course, slug=slug, is_active=True)
 
-    # Проверяем доступ пользователя
     try:
         access = CourseAccess.objects.get(user=request.user, course=course)
         has_access = access.has_access()
     except CourseAccess.DoesNotExist:
         has_access = False
 
-    # Если есть доступ - показываем курс
     if has_access:
         lessons = course.lessons.all()
         return render(request, 'courses/course_content.html', {
@@ -41,7 +51,6 @@ def course_detail(request, slug):
             'access': access,
         })
 
-    # Иначе показываем страницу оплаты
     return render(request, 'courses/course_payment.html', {
         'course': course,
     })
@@ -50,12 +59,8 @@ def course_detail(request, slug):
 @login_required
 @require_POST
 def initiate_payment(request, slug):
-    """
-    Инициализация платежа через LiqPay
-    """
     course = get_object_or_404(Course, slug=slug, is_active=True)
 
-    # Проверяем, нет ли уже доступа
     has_access = CourseAccess.objects.filter(
         user=request.user,
         course=course,
@@ -66,7 +71,6 @@ def initiate_payment(request, slug):
         messages.info(request, 'У вас уже есть доступ к этому курсу')
         return redirect('courses:course_detail', slug=slug)
 
-    # Создаем заказ
     order_id = f"ORDER-{uuid.uuid4().hex[:12].upper()}"
 
     purchase = Purchase.objects.create(
@@ -80,7 +84,6 @@ def initiate_payment(request, slug):
         status='pending',
     )
 
-    # Формируем данные для LiqPay
     liqpay = get_liqpay_service()
 
     result_url = request.build_absolute_uri(
@@ -113,11 +116,6 @@ def initiate_payment(request, slug):
 @csrf_exempt
 @require_POST
 def payment_callback(request):
-    """
-    Callback от LiqPay (server-to-server)
-    Обрабатывает уведомления о статусе платежа
-    """
-
     data = request.POST.get('data')
     signature = request.POST.get('signature')
 
@@ -125,7 +123,6 @@ def payment_callback(request):
         logger.error("Callback без данных или подписи")
         return HttpResponse(status=400)
 
-    # Проверяем подпись
     liqpay = get_liqpay_service()
     callback_data = liqpay.verify_callback(data, signature)
 
@@ -133,7 +130,6 @@ def payment_callback(request):
         logger.error("Неверная подпись LiqPay callback")
         return HttpResponse(status=400)
 
-    # Получаем заказ
     order_id = callback_data.get('order_id')
 
     try:
@@ -142,19 +138,16 @@ def payment_callback(request):
         logger.error(f"Заказ {order_id} не найден")
         return HttpResponse(status=404)
 
-    # Обрабатываем статус платежа
     with transaction.atomic():
-        # Сохраняем данные callback
         purchase.callback_data = callback_data
         purchase.payment_id = callback_data.get('payment_id', '')
         purchase.liqpay_order_id = callback_data.get('liqpay_order_id', '')
 
         payment_status = liqpay.get_payment_status(callback_data)
 
-        # Маппинг статусов LiqPay на наши статусы
         status_mapping = {
             'success': 'success',
-            'sandbox': 'success',  # Для тестирования
+            'sandbox': 'success',
             'failure': 'failure',
             'error': 'failure',
             'reversed': 'reversed',
@@ -164,7 +157,6 @@ def payment_callback(request):
         new_status = status_mapping.get(payment_status, 'processing')
         purchase.status = new_status
 
-        # Если платеж успешен - предоставляем доступ
         if liqpay.is_payment_successful(callback_data):
             purchase.mark_as_paid()
             logger.info(f"Платеж {order_id} успешно обработан")
@@ -178,10 +170,6 @@ def payment_callback(request):
 
 @login_required
 def payment_result(request, order_id):
-    """
-    Страница результата платежа
-    Сюда попадает пользователь после оплаты
-    """
     purchase = get_object_or_404(Purchase, order_id=order_id, user=request.user)
 
     context = {
@@ -189,7 +177,6 @@ def payment_result(request, order_id):
         'course': purchase.course,
     }
 
-    # Определяем шаблон в зависимости от статуса
     if purchase.status == 'success':
         messages.success(request, 'Оплата прошла успешно! Добро пожаловать на курс.')
         return redirect('courses:course_detail', slug=purchase.course.slug)
@@ -199,20 +186,15 @@ def payment_result(request, order_id):
         return render(request, 'courses/payment_failed.html', context)
 
     else:
-        # Pending или processing
         messages.info(request, 'Платеж обрабатывается. Подождите немного.')
         return render(request, 'courses/payment_pending.html', context)
 
 
 @login_required
 def lesson_detail(request, course_slug, lesson_slug):
-    """
-    Страница урока - доступна только при наличии доступа к курсу
-    """
     course = get_object_or_404(Course, slug=course_slug, is_active=True)
     lesson = get_object_or_404(Lesson, course=course, slug=lesson_slug)
 
-    # Проверяем доступ
     if not lesson.is_free:
         try:
             access = CourseAccess.objects.get(user=request.user, course=course)
@@ -223,7 +205,6 @@ def lesson_detail(request, course_slug, lesson_slug):
             messages.error(request, 'Оплатите курс для доступа к урокам')
             return redirect('courses:course_detail', slug=course_slug)
 
-    # Получаем все уроки для навигации
     all_lessons = course.lessons.all()
 
     return render(request, 'courses/lesson.html', {
@@ -235,7 +216,6 @@ def lesson_detail(request, course_slug, lesson_slug):
 
 @login_required
 def my_courses(request):
-    """Список курсов пользователя"""
     accesses = CourseAccess.objects.filter(
         user=request.user,
         is_active=True
@@ -246,7 +226,5 @@ def my_courses(request):
     })
 
 
-# Старая функция для совместимости
 def course(request):
-    """Редирект на главную страницу курсов"""
     return redirect('main:index')

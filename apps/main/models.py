@@ -15,13 +15,11 @@ class ContactRequest(models.Model):
         ('consultation', 'Консультация'),
     ]
     
-    # Основные поля
     name = models.CharField('Имя', max_length=100)
     email = models.EmailField('Email')
     service = models.CharField('Услуга', max_length=50, choices=SERVICE_CHOICES, blank=True)
     message = models.TextField('Сообщение', blank=True)
     
-    # Метаданные
     status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='new')
     created_at = models.DateTimeField('Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)

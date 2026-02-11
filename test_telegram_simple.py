@@ -1,13 +1,7 @@
-"""
-Скрипт для тестирования подключения к Telegram боту
-Запуск: python test_telegram_simple.py
-"""
-
 import os
 import requests
 from dotenv import load_dotenv
 
-# Загружаем .env
 load_dotenv()
 
 def test_telegram():
@@ -15,7 +9,6 @@ def test_telegram():
     print("ТЕСТ ПОДКЛЮЧЕНИЯ К TELEGRAM")
     print("=" * 60)
     
-    # Получаем настройки
     bot_token = os.getenv('TELEGRAM_BOT_TOKEN', '')
     chat_id = os.getenv('TELEGRAM_CHAT_ID', '')
     
@@ -44,7 +37,6 @@ def test_telegram():
         print("   TELEGRAM_CHAT_ID=ваш_chat_id_здесь")
         return False
     
-    # Тестируем подключение к боту
     print("\n🔄 Тестирование подключения к боту...")
     
     try:
@@ -72,7 +64,6 @@ def test_telegram():
         print(f"❌ Ошибка подключения: {e}")
         return False
     
-    # Тестируем отправку сообщения
     print("\n🔄 Тестирование отправки сообщения...")
     
     try:

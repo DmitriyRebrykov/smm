@@ -17,7 +17,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 @require_http_methods(["GET", "POST"])
 def register_view(request):
     """Регистрация нового пользователя"""

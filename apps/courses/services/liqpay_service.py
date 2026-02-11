@@ -1,7 +1,3 @@
-"""
-Сервис для работы с LiqPay API
-Безопасная интеграция с использованием лучших практик
-"""
 
 import base64
 import hashlib
@@ -14,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class LiqPayService:
-    """Сервис для работы с LiqPay"""
 
     API_URL = "https://www.liqpay.ua/api/3/checkout"
 
@@ -26,7 +21,6 @@ class LiqPayService:
             raise ValueError("LiqPay ключи не настроены в settings")
 
     def _generate_signature(self, data: str) -> str:
-        """Генерация подписи для запроса"""
         sign_string = self.private_key + data + self.private_key
         signature = base64.b64encode(
             hashlib.sha1(sign_string.encode('utf-8')).digest()
@@ -80,12 +74,10 @@ class LiqPayService:
             if param in kwargs:
                 params[param] = kwargs[param]
 
-        # Кодируем данные
         data = base64.b64encode(
             json.dumps(params).encode('utf-8')
         ).decode('utf-8')
 
-        # Генерируем подпись
         signature = self._generate_signature(data)
 
         logger.info(f"Создана форма оплаты для заказа {order_id}")
@@ -158,5 +150,4 @@ class LiqPayService:
 
 
 def get_liqpay_service() -> LiqPayService:
-    """Фабрика для получения экземпляра сервиса"""
     return LiqPayService()
