@@ -17,7 +17,6 @@ from apps.courses.models import CourseAccess, Purchase
 
 @require_http_methods(["GET", "POST"])
 def register_view(request):
-
     if request.user.is_authenticated:
         return redirect('users:profile')
 

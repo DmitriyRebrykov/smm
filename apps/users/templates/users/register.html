@@ -23,10 +23,8 @@
                 <p class="text-luxury-muted">Создайте аккаунт для доступа к курсам</p>
             </div>
 
-            <!-- Форма регистрации -->
             <div class="bg-luxury-card border border-white/5 p-8">
                 
-                <!-- Сообщения об ошибках -->
                 {% if messages %}
                     <div class="mb-6 space-y-2">
                         {% for message in messages %}
@@ -39,8 +37,6 @@
 
                 <form method="POST" class="space-y-6">
                     {% csrf_token %}
-                    
-                    <!-- Имя -->
                     <div>
                         <label class="block text-luxury-muted text-sm font-medium mb-2">
                             Ваше имя <span class="text-luxury-gold">*</span>
@@ -51,7 +47,6 @@
                         {% endif %}
                     </div>
 
-                    <!-- Email -->
                     <div>
                         <label class="block text-luxury-muted text-sm font-medium mb-2">
                             Email <span class="text-luxury-gold">*</span>
@@ -62,7 +57,6 @@
                         {% endif %}
                     </div>
 
-                    <!-- Пароль -->
                     <div>
                         <label class="block text-luxury-muted text-sm font-medium mb-2">
                             Пароль <span class="text-luxury-gold">*</span>
@@ -74,7 +68,6 @@
                         <p class="text-luxury-muted text-xs mt-1">Минимум 6 символов</p>
                     </div>
 
-                    <!-- Подтверждение пароля -->
                     <div>
                         <label class="block text-luxury-muted text-sm font-medium mb-2">
                             Повторите пароль <span class="text-luxury-gold">*</span>
@@ -85,8 +78,7 @@
                         {% endif %}
                     </div>
 
-                    <!-- Кнопка регистрации -->
-                    <button 
+                    <button
                         type="submit" 
                         class="w-full bg-luxury-gold hover:bg-white text-black font-bold py-4 uppercase tracking-widest text-sm transition-all duration-300"
                     >
@@ -95,7 +87,6 @@
 
                 </form>
 
-                <!-- Разделитель -->
                 <div class="relative my-8">
                     <div class="absolute inset-0 flex items-center">
                         <div class="w-full border-t border-white/10"></div>
@@ -105,7 +96,6 @@
                     </div>
                 </div>
 
-                <!-- Ссылка на вход -->
                 <div class="text-center">
                     <p class="text-luxury-muted text-sm">
                         Уже есть аккаунт? 
@@ -117,7 +107,6 @@
 
             </div>
 
-            <!-- Политика конфиденциальности -->
             <div class="mt-6 text-center">
                 <p class="text-luxury-muted text-xs">
                     Регистрируясь, вы принимаете 

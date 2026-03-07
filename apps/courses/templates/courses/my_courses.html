@@ -43,34 +43,28 @@
         </div>
 
         {% if accesses %}
-            <!-- Сетка курсов -->
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
                 {% for access in accesses %}
                 <div class="course-card bg-luxury-card border border-white/5 overflow-hidden flex flex-col h-full group">
 
-                    <!-- Изображение курса -->
                     <div class="relative h-56 overflow-hidden">
                         {% if access.course.preview_image %}
                             <img src="{{ access.course.preview_image.url }}" alt="{{ access.course.title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                         {% else %}
-                            <!-- Заглушка, если нет картинки -->
                             <div class="w-full h-full bg-[#181614] flex items-center justify-center border-b border-white/5">
                                 <span class="text-luxury-gold text-4xl font-montserrat font-bold opacity-20">SMM</span>
                             </div>
                         {% endif %}
 
-                        <!-- Оверлей при наведении -->
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <a href="" class="px-6 py-3 bg-luxury-gold text-black font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300">
+                            <a href="{% url 'courses:course_detail' access.course.slug %}" class="px-6 py-3 bg-luxury-gold text-black font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300">
                                 Перейти к урокам
                             </a>
                         </div>
                     </div>
 
-                    <!-- Контент карточки -->
                     <div class="p-6 flex flex-col flex-grow">
-                        <!-- Мета данные -->
                         <div class="flex justify-between items-center mb-3 text-xs text-luxury-muted uppercase tracking-widest">
                             <span>{{ access.course.lessons_count }} уроков</span>
                             <span>Доступ активен</span>
@@ -94,7 +88,6 @@
                                 <div class="bg-luxury-gold h-full rounded-full progress-bar-glow" style="width: 0%"></div>
                             </div>
 
-                            <!-- Кнопка (мобильная версия или если оверлей скрыт) -->
                             <a href="#" class="block w-full mt-4 text-center py-3 border border-white/10 text-white hover:border-luxury-gold hover:text-luxury-gold transition-all text-xs uppercase tracking-widest md:hidden">
                                 Продолжить
                             </a>
@@ -118,7 +111,7 @@
                 <p class="text-luxury-muted mb-8">
                     Выберите подходящую программу обучения, чтобы начать свой путь в SMM.
                 </p>
-                <a href="{% url 'index' %}#course" class="inline-block px-10 py-4 bg-luxury-gold text-black hover:bg-white transition-all uppercase tracking-widest text-sm font-bold shadow-[0_0_20px_rgba(197,157,95,0.2)]">
+                <a href="{% url 'main:index' %}#course" class="inline-block px-10 py-4 bg-luxury-gold text-black hover:bg-white transition-all uppercase tracking-widest text-sm font-bold shadow-[0_0_20px_rgba(197,157,95,0.2)]">
                     Выбрать курс
                 </a>
             </div>
