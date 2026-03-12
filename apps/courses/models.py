@@ -144,3 +144,139 @@ class Lesson(models.Model):
 
     def __str__(self):
         return f"{self.course.title} - {self.title}"
+
+
+class LessonProgress(models.Model):
+    """Прогресс прохождения урока пользователем"""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='lesson_progress',
+        verbose_name='Пользователь'
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name='progress_records',
+        verbose_name='Урок'
+    )
+    is_completed = models.BooleanField('Завершён', default=False)
+    completed_at = models.DateTimeField('Завершён в', null=True, blank=True)
+
+    created_at = models.DateTimeField('Создан', auto_now_add=True)
+    updated_at = models.DateTimeField('Обновлён', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Прогресс урока'
+        verbose_name_plural = 'Прогресс уроков'
+        unique_together = ['user', 'lesson']
+
+    def __str__(self):
+        status = "✓" if self.is_completed else "○"
+        return f"{status} {self.user.email} — {self.lesson.title}"
+
+    def mark_completed(self):
+        if not self.is_completed:
+            self.is_completed = True
+            self.completed_at = timezone.now()
+            self.save()
+
+    @classmethod
+    def get_course_progress(cls, user, course):
+        """Возвращает процент прохождения курса (0-100)"""
+        total_lessons = course.lessons.count()
+        if total_lessons == 0:
+            return 0
+        completed = cls.objects.filter(
+            user=user,
+            lesson__course=course,
+            is_completed=True
+        ).count()
+        return int((completed / total_lessons) * 100)
+
+    @classmethod
+    def get_completed_ids(cls, user, course):
+        """Возвращает set ID завершённых уроков"""
+        return set(cls.objects.filter(
+            user=user,
+            lesson__course=course,
+            is_completed=True
+        ).values_list('lesson_id', flat=True))
+
+
+def validate_submission_file(value):
+    """Валидация: только PDF, изображения и видео"""
+    import os
+    from django.core.exceptions import ValidationError
+
+    ALLOWED_EXTENSIONS = {
+        # PDF
+        '.pdf',
+        # Изображения
+        '.jpg', '.jpeg', '.png', '.gif', '.webp',
+        # Видео
+        '.mp4', '.mov', '.avi', '.mkv', '.webm',
+    }
+
+    ext = os.path.splitext(value.name)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        raise ValidationError(
+            f'Формат "{ext}" не поддерживается. '
+            f'Разрешены: PDF, изображения (JPG, PNG, GIF, WEBP) и видео (MP4, MOV, AVI, MKV, WEBM).'
+        )
+
+
+class LessonSubmission(models.Model):
+    """Домашняя работа студента"""
+    STATUS_CHOICES = [
+        ('pending', 'На проверке'),
+        ('reviewed', 'Проверено'),
+        ('approved', 'Принято'),
+        ('rejected', 'На доработке'),
+    ]
+
+    ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png', '.gif', '.webp',
+                          '.mp4', '.mov', '.avi', '.mkv', '.webm']
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='submissions',
+        verbose_name='Пользователь'
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name='submissions',
+        verbose_name='Урок'
+    )
+    file = models.FileField(
+        'Файл',
+        upload_to='submissions/%Y/%m/',
+        validators=[validate_submission_file],
+        help_text='Разрешены: PDF, изображения (JPG, PNG, GIF, WEBP), видео (MP4, MOV, AVI, MKV, WEBM). До 50 МБ.'
+    )
+    comment = models.TextField('Комментарий', blank=True)
+
+    status = models.CharField(
+        'Статус', max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )
+    feedback = models.TextField('Обратная связь преподавателя', blank=True)
+
+    created_at = models.DateTimeField('Отправлено', auto_now_add=True)
+    updated_at = models.DateTimeField('Обновлено', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Работа студента'
+        verbose_name_plural = 'Работы студентов'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.email} — {self.lesson.title} ({self.get_status_display()})"
+
+    @property
+    def filename(self):
+        import os
+        return os.path.basename(self.file.name)

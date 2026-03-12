@@ -160,7 +160,7 @@
                         {% endif %}
 
                         {% if next_lesson %}
-                            <a href="{% url 'lesson_detail' course.slug next_lesson.slug %}" class="flex items-center gap-2 border border-luxury-gold bg-luxury-gold text-black px-6 py-2.5 rounded-full hover:bg-white transition-all text-sm font-bold uppercase tracking-wide">
+                            <a href="{% url 'courses:lesson_detail' course.slug next_lesson.slug %}" class="flex items-center gap-2 border border-luxury-gold bg-luxury-gold text-black px-6 py-2.5 rounded-full hover:bg-white transition-all text-sm font-bold uppercase tracking-wide">
                                 <span>Далее</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </a>
@@ -227,7 +227,7 @@
                     {% endif %}
 
                     {% if next_lesson %}
-                        <a href="{% url 'lesson_detail' course.slug next_lesson.slug %}" class="bg-luxury-gold text-black px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors">
+                        <a href="{% url 'courses:lesson_detail' course.slug next_lesson.slug %}" class="bg-luxury-gold text-black px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors">
                              След. урок →
                         </a>
                     {% endif %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Course, CourseAccess, Purchase, Lesson
+from .models import Course, CourseAccess, Purchase, Lesson, LessonProgress, LessonSubmission
 
 
 @admin.register(Course)
@@ -109,19 +109,6 @@ class CourseAccessAdmin(admin.ModelAdmin):
     search_fields = ('user__email', 'user__username', 'course__title')
     readonly_fields = ('granted_at',)
 
-    fieldsets = (
-        ('Основная информация', {
-            'fields': ('user', 'course', 'is_active')
-        }),
-        ('Срок доступа', {
-            'fields': ('granted_at', 'expires_at')
-        }),
-        ('Связанная покупка', {
-            'fields': ('purchase',),
-            'classes': ('collapse',)
-        }),
-    )
-
     def access_status(self, obj):
         if obj.has_access():
             return format_html(
@@ -132,3 +119,69 @@ class CourseAccessAdmin(admin.ModelAdmin):
         )
 
     access_status.short_description = 'Статус доступа'
+
+
+@admin.register(LessonProgress)
+class LessonProgressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'lesson', 'course_title', 'is_completed', 'completed_at')
+    list_filter = ('is_completed', 'lesson__course')
+    search_fields = ('user__email', 'lesson__title')
+    readonly_fields = ('completed_at', 'created_at', 'updated_at')
+
+    def course_title(self, obj):
+        return obj.lesson.course.title
+    course_title.short_description = 'Курс'
+
+
+@admin.register(LessonSubmission)
+class LessonSubmissionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'lesson', 'course_title', 'status_badge', 'created_at', 'file_link')
+    list_filter = ('status', 'lesson__course', 'created_at')
+    search_fields = ('user__email', 'lesson__title')
+    readonly_fields = ('created_at', 'updated_at', 'file_link')
+
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('user', 'lesson', 'status')
+        }),
+        ('Работа', {
+            'fields': ('file_link', 'comment')
+        }),
+        ('Обратная связь', {
+            'fields': ('feedback',)
+        }),
+        ('Временные метки', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def course_title(self, obj):
+        return obj.lesson.course.title
+    course_title.short_description = 'Курс'
+
+    def status_badge(self, obj):
+        colors = {
+            'pending': '#f59e0b',
+            'reviewed': '#3b82f6',
+            'approved': '#10b981',
+            'rejected': '#ef4444',
+        }
+        color = colors.get(obj.status, '#6b7280')
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 3px 10px; '
+            'border-radius: 3px; font-size: 11px; font-weight: bold;">{}</span>',
+            color,
+            obj.get_status_display()
+        )
+    status_badge.short_description = 'Статус'
+
+    def file_link(self, obj):
+        if obj.file:
+            return format_html(
+                '<a href="{}" target="_blank" style="color: #3b82f6;">📎 {}</a>',
+                obj.file.url,
+                obj.filename
+            )
+        return '-'
+    file_link.short_description = 'Файл'

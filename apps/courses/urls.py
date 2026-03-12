@@ -11,4 +11,8 @@ urlpatterns = [
     path('payment/callback/', views.payment_callback, name='payment_callback'),
     path('payment/result/<str:order_id>/', views.payment_result, name='payment_result'),
     path('<slug:course_slug>/lesson/<slug:lesson_slug>/', views.lesson_detail, name='lesson_detail'),
+
+    # Прогресс и домашние работы
+    path('<slug:course_slug>/lesson/<slug:lesson_slug>/complete/', views.complete_lesson, name='complete_lesson'),
+    path('<slug:course_slug>/lesson/<slug:lesson_slug>/submit/', views.submit_homework, name='submit_homework'),
 ]

@@ -9,7 +9,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.db import transaction
 
-from .models import Course, CourseAccess, Purchase, Lesson
+from .models import Course, CourseAccess, Purchase, Lesson, LessonProgress, LessonSubmission
 from .services.liqpay_service import get_liqpay_service
 import uuid
 import logging
@@ -33,6 +33,7 @@ def courses_catalog(request):
     }
     return render(request, 'courses/course_catalog.html', context)
 
+
 @login_required
 def course_detail(request, slug):
     course = get_object_or_404(Course, slug=slug, is_active=True)
@@ -45,10 +46,23 @@ def course_detail(request, slug):
 
     if has_access:
         lessons = course.lessons.all()
+        progress_pct = LessonProgress.get_course_progress(request.user, course)
+        completed_ids = LessonProgress.get_completed_ids(request.user, course)
+
+        # Найти первый незавершённый урок для кнопки "Продолжить"
+        next_lesson = None
+        for lesson in lessons:
+            if lesson.id not in completed_ids:
+                next_lesson = lesson
+                break
+
         return render(request, 'courses/course_content.html', {
             'course': course,
             'lessons': lessons,
             'access': access,
+            'progress_pct': progress_pct,
+            'completed_ids': completed_ids,
+            'next_lesson': next_lesson,
         })
 
     return render(request, 'courses/course_payment.html', {
@@ -207,11 +221,121 @@ def lesson_detail(request, course_slug, lesson_slug):
 
     all_lessons = course.lessons.all()
 
+    # Прогресс
+    progress_pct = LessonProgress.get_course_progress(request.user, course)
+    completed_ids = LessonProgress.get_completed_ids(request.user, course)
+
+    # Текущий статус урока
+    lesson_progress, _ = LessonProgress.objects.get_or_create(
+        user=request.user,
+        lesson=lesson
+    )
+
+    # Предыдущий / следующий уроки
+    lessons_list = list(all_lessons)
+    current_index = next((i for i, l in enumerate(lessons_list) if l.id == lesson.id), None)
+    prev_lesson = lessons_list[current_index - 1] if current_index and current_index > 0 else None
+    next_lesson = lessons_list[current_index + 1] if current_index is not None and current_index < len(lessons_list) - 1 else None
+
+    # Отправленные работы по этому уроку
+    submissions = LessonSubmission.objects.filter(
+        user=request.user,
+        lesson=lesson
+    ).order_by('-created_at')
+
     return render(request, 'courses/lesson.html', {
         'course': course,
         'lesson': lesson,
-        'all_lessons': all_lessons,
+        'lessons': all_lessons,
+        'prev_lesson': prev_lesson,
+        'next_lesson': next_lesson,
+        'progress_pct': progress_pct,
+        'completed_ids': completed_ids,
+        'lesson_progress': lesson_progress,
+        'submissions': submissions,
     })
+
+
+@login_required
+@require_POST
+def complete_lesson(request, course_slug, lesson_slug):
+    """AJAX: отметить урок как завершённый"""
+    course = get_object_or_404(Course, slug=course_slug, is_active=True)
+    lesson = get_object_or_404(Lesson, course=course, slug=lesson_slug)
+
+    # Проверяем доступ
+    if not lesson.is_free:
+        has_access = CourseAccess.objects.filter(
+            user=request.user, course=course, is_active=True
+        ).exists()
+        if not has_access:
+            return JsonResponse({'error': 'Нет доступа'}, status=403)
+
+    progress, created = LessonProgress.objects.get_or_create(
+        user=request.user,
+        lesson=lesson
+    )
+    progress.mark_completed()
+
+    new_progress_pct = LessonProgress.get_course_progress(request.user, course)
+
+    return JsonResponse({
+        'success': True,
+        'lesson_id': lesson.id,
+        'progress_pct': new_progress_pct,
+        'message': 'Урок завершён!'
+    })
+
+
+@login_required
+@require_POST
+def submit_homework(request, course_slug, lesson_slug):
+    """Загрузка домашней работы"""
+    course = get_object_or_404(Course, slug=course_slug, is_active=True)
+    lesson = get_object_or_404(Lesson, course=course, slug=lesson_slug)
+
+    # Проверяем доступ
+    if not lesson.is_free:
+        has_access = CourseAccess.objects.filter(
+            user=request.user, course=course, is_active=True
+        ).exists()
+        if not has_access:
+            messages.error(request, 'Нет доступа к уроку')
+            return redirect('courses:course_detail', slug=course_slug)
+
+    uploaded_file = request.FILES.get('submission_file')
+    comment = request.POST.get('comment', '').strip()
+
+    if not uploaded_file:
+        messages.error(request, 'Выберите файл для загрузки')
+        return redirect('courses:lesson_detail', course_slug=course_slug, lesson_slug=lesson_slug)
+
+    # Валидация расширения
+    import os
+    ALLOWED_EXTENSIONS = {'.pdf', '.jpg', '.jpeg', '.png', '.gif', '.webp',
+                          '.mp4', '.mov', '.avi', '.mkv', '.webm'}
+    ext = os.path.splitext(uploaded_file.name)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        messages.error(
+            request,
+            f'Формат "{ext}" не поддерживается. Разрешены: PDF, изображения и видео.'
+        )
+        return redirect('courses:lesson_detail', course_slug=course_slug, lesson_slug=lesson_slug)
+
+    # Ограничение размера: 50 МБ
+    if uploaded_file.size > 50 * 1024 * 1024:
+        messages.error(request, 'Файл слишком большой. Максимум 50 МБ.')
+        return redirect('courses:lesson_detail', course_slug=course_slug, lesson_slug=lesson_slug)
+
+    LessonSubmission.objects.create(
+        user=request.user,
+        lesson=lesson,
+        file=uploaded_file,
+        comment=comment,
+    )
+
+    messages.success(request, 'Работа отправлена на проверку!')
+    return redirect('courses:lesson_detail', course_slug=course_slug, lesson_slug=lesson_slug)
 
 
 @login_required
@@ -221,8 +345,18 @@ def my_courses(request):
         is_active=True
     ).select_related('course')
 
+    # Добавляем прогресс к каждому курсу
+    courses_with_progress = []
+    for access in accesses:
+        progress = LessonProgress.get_course_progress(request.user, access.course)
+        courses_with_progress.append({
+            'access': access,
+            'progress': progress,
+        })
+
     return render(request, 'courses/my_courses.html', {
         'accesses': accesses,
+        'courses_with_progress': courses_with_progress,
     })
 
 

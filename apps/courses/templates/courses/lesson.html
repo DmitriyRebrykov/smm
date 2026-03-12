@@ -5,82 +5,90 @@
 
 {% block extra_css %}
 <style>
-    /* Скрываем скроллбар, но оставляем функционал */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Кастомный скролл для плейлиста */
-    .playlist-scroll::-webkit-scrollbar {
-        width: 4px;
-    }
-    .playlist-scroll::-webkit-scrollbar-track {
-        background: rgba(255,255,255,0.02);
-    }
-    .playlist-scroll::-webkit-scrollbar-thumb {
-        background: #333;
-        border-radius: 2px;
-    }
-    .playlist-scroll::-webkit-scrollbar-thumb:hover {
-        background: #C59D5F;
-    }
+    .playlist-scroll::-webkit-scrollbar { width: 4px; }
+    .playlist-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    .playlist-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    .playlist-scroll::-webkit-scrollbar-thumb:hover { background: #C59D5F; }
 
-    /* Эффект активного урока */
+    /* Активный урок */
     .lesson-row.active {
         background: rgba(197, 157, 95, 0.1);
         border-left-color: #C59D5F;
     }
-    .lesson-row.active .lesson-title {
-        color: #C59D5F;
-    }
-    .lesson-row.active .play-icon {
-        opacity: 1;
-        transform: scale(1);
-    }
+    .lesson-row.active .lesson-title { color: #C59D5F; }
 
-    /* Кинематографичное свечение видео */
-    .cinema-glow {
-        box-shadow: 0 0 80px -20px rgba(197, 157, 95, 0.15);
-    }
+    /* Завершённый урок в плейлисте */
+    .lesson-row.completed .lesson-title { color: rgba(255,255,255,0.5); }
+    .lesson-row.completed .check-icon { opacity: 1; }
+
+    /* Свечение видео */
+    .cinema-glow { box-shadow: 0 0 80px -20px rgba(197, 157, 95, 0.15); }
 
     /* Анимация табов */
-    .tab-pane {
-        display: none;
-        animation: fadeEffect 0.4s;
-    }
-    .tab-pane.active {
-        display: block;
-    }
+    .tab-pane { display: none; animation: fadeEffect 0.4s; }
+    .tab-pane.active { display: block; }
     @keyframes fadeEffect {
-        from {opacity: 0; transform: translateY(10px);}
-        to {opacity: 1; transform: translateY(0);}
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Типографика контента */
+    /* Типографика */
     .prose-custom h2 { color: white; font-size: 1.5em; margin-top: 1.5em; margin-bottom: 0.5em; font-weight: 600; }
     .prose-custom h3 { color: #E8E0D5; font-size: 1.25em; margin-top: 1.2em; margin-bottom: 0.5em; font-weight: 500; }
     .prose-custom p { color: #9CA3AF; line-height: 1.7; margin-bottom: 1em; }
     .prose-custom ul { list-style: disc; padding-left: 1.2em; color: #9CA3AF; margin-bottom: 1em; }
     .prose-custom li { margin-bottom: 0.3em; }
     .prose-custom a { color: #C59D5F; text-decoration: underline; text-underline-offset: 4px; }
+
+    /* Кнопка "Завершить урок" */
+    .btn-complete {
+        transition: all 0.3s ease;
+    }
+    .btn-complete.done {
+        background: #10b981 !important;
+        border-color: #10b981 !important;
+        color: white !important;
+        cursor: default;
+    }
+    .btn-complete.loading {
+        opacity: 0.7;
+        cursor: wait;
+    }
+
+    /* Прогресс-бар */
+    .progress-fill {
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Drag & Drop зона */
+    .drop-zone {
+        transition: all 0.3s ease;
+        border: 2px dashed rgba(255,255,255,0.1);
+    }
+    .drop-zone.drag-over {
+        border-color: #C59D5F;
+        background: rgba(197, 157, 95, 0.05);
+    }
+
+    /* Статус работы */
+    .status-pending  { background: rgba(245,158,11,0.15);  color: #f59e0b;  border-color: rgba(245,158,11,0.3); }
+    .status-approved { background: rgba(16,185,129,0.15);  color: #10b981;  border-color: rgba(16,185,129,0.3); }
+    .status-rejected { background: rgba(239,68,68,0.15);   color: #ef4444;  border-color: rgba(239,68,68,0.3); }
+    .status-reviewed { background: rgba(59,130,246,0.15);  color: #3b82f6;  border-color: rgba(59,130,246,0.3); }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- Основной контейнер -->
 <div class="min-h-screen bg-[#0F0D0B] pt-24 pb-20">
-
-    <!-- Фоновый амбиент (еле заметный) -->
     <div class="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-b from-[#181614] to-transparent pointer-events-none z-0"></div>
 
     <div class="container mx-auto px-4 max-w-[1600px] relative z-10">
 
-        <!-- Верхняя навигация (Хлебные крошки и Название курса) -->
+        <!-- Шапка: хлебные крошки + прогресс -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div class="flex items-center gap-2 text-xs md:text-sm text-luxury-muted">
                 <a href="{% url 'courses:my_courses' %}" class="hover:text-white transition-colors flex items-center gap-1">
@@ -91,23 +99,25 @@
                 <span class="text-luxury-gold uppercase tracking-wider font-bold">{{ course.title }}</span>
             </div>
 
-            <!-- Прогресс (Визуальный) -->
+            <!-- Прогресс-бар -->
             <div class="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/5">
                 <span class="text-xs text-luxury-muted uppercase font-bold">Прогресс</span>
-                <div class="w-24 h-1.5 bg-black rounded-full overflow-hidden">
-                    <!-- Пример: 30% -->
-                    <div class="h-full bg-luxury-gold w-[30%] shadow-[0_0_10px_#C59D5F]"></div>
+                <div class="w-32 h-1.5 bg-black rounded-full overflow-hidden">
+                    <div id="progress-bar-fill"
+                         class="h-full bg-luxury-gold rounded-full progress-fill shadow-[0_0_10px_#C59D5F]"
+                         style="width: {{ progress_pct }}%">
+                    </div>
                 </div>
-                <span class="text-xs text-white font-mono">30%</span>
+                <span id="progress-text" class="text-xs text-white font-mono">{{ progress_pct }}%</span>
             </div>
         </div>
 
         <div class="grid lg:grid-cols-12 gap-6 items-start">
 
-            <!-- ЛЕВАЯ КОЛОНКА: Плеер и Контент (Занимает 8-9 колонок) -->
+            <!-- ЛЕВАЯ КОЛОНКА: Плеер + Контент -->
             <div class="lg:col-span-8 xl:col-span-9 space-y-6">
 
-                <!-- 1. VIDEO PLAYER WRAPPER -->
+                <!-- Видео-плеер -->
                 <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-white/10 cinema-glow group">
                     {% if lesson.video_url %}
                         <iframe class="w-full h-full"
@@ -119,32 +129,70 @@
                         </iframe>
                     {% else %}
                         <div class="w-full h-full flex flex-col items-center justify-center bg-[#141210]">
-                            <svg class="w-16 h-16 text-white/10 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            <svg class="w-16 h-16 text-white/10 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
                             <p class="text-luxury-muted">В этом уроке нет видеоматериала</p>
                         </div>
                     {% endif %}
                 </div>
 
-                <!-- 2. HEADER & TABS -->
+                <!-- Контентный блок -->
                 <div class="bg-[#141210] border border-white/5 rounded-xl p-6 md:p-8">
-                    <h1 class="text-2xl md:text-3xl font-bold text-white mb-6 font-montserrat">{{ lesson.title }}</h1>
 
-                    <!-- Tab Buttons -->
+                    <!-- Заголовок урока + кнопка завершения -->
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+                        <h1 class="text-2xl md:text-3xl font-bold text-white font-montserrat flex-1">
+                            {{ lesson.title }}
+                        </h1>
+
+                        <!-- Кнопка "Завершить урок" -->
+                        <button
+                            id="complete-btn"
+                            onclick="completeLesson()"
+                            data-url="{% url 'courses:complete_lesson' course.slug lesson.slug %}"
+                            class="btn-complete shrink-0 flex items-center gap-2 px-6 py-3 border font-bold text-xs uppercase tracking-widest transition-all rounded-sm
+                            {% if lesson_progress.is_completed %}
+                                done border-green-500/30 bg-green-500/10 text-green-400
+                            {% else %}
+                                border-luxury-gold/50 text-luxury-gold hover:bg-luxury-gold hover:text-black
+                            {% endif %}"
+                            {% if lesson_progress.is_completed %}disabled{% endif %}
+                        >
+                            {% if lesson_progress.is_completed %}
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Урок завершён
+                            {% else %}
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Завершить урок
+                            {% endif %}
+                        </button>
+                    </div>
+
+                    <!-- Табы -->
                     <div class="flex gap-8 border-b border-white/10 mb-8 overflow-x-auto no-scrollbar">
                         <button onclick="openTab(event, 'desc')" class="tab-btn active pb-4 text-sm font-bold uppercase tracking-widest text-white border-b-2 border-luxury-gold transition-all whitespace-nowrap">
                             Описание
                         </button>
                         <button onclick="openTab(event, 'files')" class="tab-btn pb-4 text-sm font-bold uppercase tracking-widest text-luxury-muted hover:text-white border-b-2 border-transparent transition-all whitespace-nowrap">
-                            Материалы <span class="ml-1 text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-white">{{ lesson.files|length }}</span>
+                            Материалы
+                            {% if lesson.files %}
+                                <span class="ml-1 text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-white">{{ lesson.files|length }}</span>
+                            {% endif %}
                         </button>
                         <button onclick="openTab(event, 'homework')" class="tab-btn pb-4 text-sm font-bold uppercase tracking-widest text-luxury-muted hover:text-white border-b-2 border-transparent transition-all whitespace-nowrap">
                             Домашнее задание
+                            {% if submissions %}
+                                <span class="ml-1 text-[10px] bg-luxury-gold/20 px-1.5 py-0.5 rounded text-luxury-gold">{{ submissions|length }}</span>
+                            {% endif %}
                         </button>
                     </div>
 
-                    <!-- TAB CONTENT -->
-
-                    <!-- Описание -->
+                    <!-- TAB: Описание -->
                     <div id="desc" class="tab-pane active prose-custom">
                         {% if lesson.content %}
                             {{ lesson.content|safe }}
@@ -153,14 +201,17 @@
                         {% endif %}
                     </div>
 
-                    <!-- Файлы -->
+                    <!-- TAB: Материалы -->
                     <div id="files" class="tab-pane">
                         {% if lesson.files %}
                             <div class="grid md:grid-cols-2 gap-4">
                                 {% for file in lesson.files %}
-                                <a href="{{ file.url }}" target="_blank" class="flex items-center gap-4 p-4 bg-[#1A1816] border border-white/5 hover:border-luxury-gold/50 rounded-lg group transition-all">
+                                <a href="{{ file.url }}" target="_blank"
+                                   class="flex items-center gap-4 p-4 bg-[#1A1816] border border-white/5 hover:border-luxury-gold/50 rounded-lg group transition-all">
                                     <div class="w-12 h-12 bg-black/50 rounded flex items-center justify-center text-luxury-gold group-hover:scale-110 transition-transform">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
                                     </div>
                                     <div class="overflow-hidden">
                                         <p class="text-white font-medium truncate">{{ file.name }}</p>
@@ -171,45 +222,138 @@
                             </div>
                         {% else %}
                             <div class="text-center py-10 bg-[#1A1816] rounded-lg border border-white/5">
-                                <p class="text-luxury-muted">Нет прикрепленных файлов</p>
+                                <p class="text-luxury-muted">Нет прикрепленных материалов</p>
                             </div>
                         {% endif %}
                     </div>
 
-                    <!-- Домашка -->
+                    <!-- TAB: Домашнее задание -->
                     <div id="homework" class="tab-pane">
-                        <div class="bg-gradient-to-r from-[#1A1816] to-[#141210] border border-luxury-gold/20 p-6 rounded-lg relative overflow-hidden">
-                            <!-- Декор -->
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-luxury-gold/5 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="space-y-6">
 
-                            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                Ваше задание
-                            </h3>
+                            <!-- Форма загрузки работы -->
+                            <div class="bg-gradient-to-r from-[#1A1816] to-[#141210] border border-luxury-gold/20 p-6 rounded-lg relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-32 h-32 bg-luxury-gold/5 rounded-full blur-2xl pointer-events-none"></div>
 
-                            <div class="prose-custom mb-6 text-sm">
-                                <p>1. Изучите материал урока.</p>
-                                <p>2. Прикрепите ссылку на выполненную работу в Google Docs.</p>
+                                <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                    </svg>
+                                    Отправить работу
+                                </h3>
+                                <p class="text-luxury-muted text-sm mb-6">Загрузите файл с выполненным заданием. До 50 МБ.</p>
+
+                                <form method="post"
+                                      action="{% url 'courses:submit_homework' course.slug lesson.slug %}"
+                                      enctype="multipart/form-data"
+                                      class="relative z-10"
+                                      id="homework-form">
+                                    {% csrf_token %}
+
+                                    <!-- Drag & Drop зона -->
+                                    <div id="drop-zone"
+                                         class="drop-zone rounded-lg p-8 text-center cursor-pointer mb-4 relative"
+                                         onclick="document.getElementById('submission-file-input').click()"
+                                         ondragover="handleDragOver(event)"
+                                         ondragleave="handleDragLeave(event)"
+                                         ondrop="handleDrop(event)">
+
+                                        <div id="drop-zone-content">
+                                            <svg class="w-10 h-10 text-white/20 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                            </svg>
+                                            <p class="text-luxury-muted text-sm">Перетащите файл сюда или <span class="text-luxury-gold">нажмите для выбора</span></p>
+                                            <p class="text-white/20 text-xs mt-1">PDF · JPG · PNG · MP4 · MOV · и другие · до 50 МБ</p>
+                                        </div>
+
+                                        <!-- Превью выбранного файла -->
+                                        <div id="file-preview" class="hidden text-center">
+                                            <svg class="w-8 h-8 text-luxury-gold mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            <p id="file-name" class="text-white font-medium text-sm truncate max-w-xs mx-auto"></p>
+                                            <p id="file-size" class="text-luxury-muted text-xs mt-1"></p>
+                                        </div>
+
+                                        <input type="file"
+                                               id="submission-file-input"
+                                               name="submission_file"
+                                               class="hidden"
+                                               accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.mkv,.webm"
+                                               onchange="handleFileSelect(this)">
+                                    </div>
+
+                                    <!-- Комментарий -->
+                                    <textarea
+                                        name="comment"
+                                        rows="3"
+                                        class="w-full bg-black/40 border border-white/10 rounded-lg p-4 text-white placeholder-white/20 focus:border-luxury-gold focus:outline-none transition-colors mb-4 text-sm resize-none"
+                                        placeholder="Добавьте комментарий к работе (необязательно)..."
+                                    ></textarea>
+
+                                    <button type="submit"
+                                            id="submit-hw-btn"
+                                            class="px-8 py-3 bg-luxury-gold text-black font-bold uppercase text-xs tracking-widest hover:bg-white transition-all rounded shadow-[0_0_15px_rgba(197,157,95,0.2)] disabled:opacity-50 disabled:cursor-not-allowed">
+                                        Отправить на проверку
+                                    </button>
+                                </form>
                             </div>
 
-                            <form action="" method="post" class="relative z-10">
-                                {% csrf_token %}
-                                <textarea class="w-full bg-black/50 border border-white/10 rounded-lg p-4 text-white placeholder-white/20 focus:border-luxury-gold focus:outline-none transition-colors mb-4" rows="3" placeholder="Вставьте ссылку на задание или напишите ответ..."></textarea>
-                                <button type="submit" class="px-8 py-3 bg-luxury-gold text-black font-bold uppercase text-xs tracking-widest hover:bg-white transition-all rounded shadow-[0_0_15px_rgba(197,157,95,0.2)]">
-                                    Отправить на проверку
-                                </button>
-                            </form>
+                            <!-- История отправленных работ -->
+                            {% if submissions %}
+                            <div>
+                                <h4 class="text-sm font-bold text-white uppercase tracking-widest mb-4">Мои работы</h4>
+                                <div class="space-y-3">
+                                    {% for sub in submissions %}
+                                    <div class="flex items-center justify-between p-4 bg-[#1A1816] rounded-lg border border-white/5 gap-4">
+                                        <div class="flex items-center gap-3 min-w-0">
+                                            <div class="w-9 h-9 bg-black/50 rounded flex items-center justify-center text-luxury-gold shrink-0">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <a href="{{ sub.file.url }}" target="_blank"
+                                                   class="text-white text-sm font-medium hover:text-luxury-gold transition-colors truncate block">
+                                                    {{ sub.filename }}
+                                                </a>
+                                                <p class="text-white/30 text-xs mt-0.5">{{ sub.created_at|date:"d.m.Y H:i" }}</p>
+                                                {% if sub.comment %}
+                                                    <p class="text-luxury-muted text-xs mt-1 italic truncate">{{ sub.comment }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="shrink-0 flex flex-col items-end gap-1">
+                                            <span class="px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider border status-{{ sub.status }}">
+                                                {{ sub.get_status_display }}
+                                            </span>
+                                            {% if sub.feedback %}
+                                                <span class="text-[10px] text-luxury-gold cursor-pointer hover:text-white transition-colors"
+                                                      title="{{ sub.feedback }}">
+                                                    💬 Есть отзыв
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+
                         </div>
                     </div>
 
                 </div>
 
-                <!-- Кнопки навигации (Мобильные + Десктоп) -->
+                <!-- Навигация между уроками -->
                 <div class="flex justify-between items-center pt-4">
                     {% if prev_lesson %}
-                        <a href="{% url 'main:lesson_detail' course.slug prev_lesson.slug %}" class="flex items-center gap-2 text-luxury-muted hover:text-white transition-colors group">
+                        <a href="{% url 'courses:lesson_detail' course.slug prev_lesson.slug %}"
+                           class="flex items-center gap-2 text-luxury-muted hover:text-white transition-colors group">
                             <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-luxury-gold transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
                             </div>
                             <span class="text-sm font-medium hidden md:block">Предыдущий урок</span>
                         </a>
@@ -218,39 +362,63 @@
                     {% endif %}
 
                     {% if next_lesson %}
-                        <a href="{% url 'main:lesson_detail' course.slug next_lesson.slug %}" class="flex items-center gap-2 text-white hover:text-luxury-gold transition-colors group">
+                        <a href="{% url 'courses:lesson_detail' course.slug next_lesson.slug %}"
+                           class="flex items-center gap-2 text-white hover:text-luxury-gold transition-colors group">
                             <span class="text-sm font-medium hidden md:block">Следующий урок</span>
                             <div class="w-10 h-10 rounded-full bg-luxury-gold text-black flex items-center justify-center group-hover:bg-white transition-colors shadow-lg">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
                             </div>
                         </a>
+                    {% else %}
+                        <div class="flex items-center gap-2 text-luxury-muted">
+                            <span class="text-sm">Последний урок курса 🎉</span>
+                        </div>
                     {% endif %}
                 </div>
 
             </div>
 
-            <!-- ПРАВАЯ КОЛОНКА: Плейлист уроков (3-4 колонки) -->
+            <!-- ПРАВАЯ КОЛОНКА: Плейлист -->
             <div class="lg:col-span-4 xl:col-span-3">
                 <div class="bg-[#141210] border border-white/5 rounded-xl overflow-hidden sticky top-24">
                     <div class="p-5 border-b border-white/5 bg-[#1A1816]">
                         <h4 class="text-white font-bold text-sm uppercase tracking-widest">Содержание курса</h4>
+                        <!-- Мини-прогресс в сайдбаре -->
+                        <div class="mt-3 flex items-center gap-2">
+                            <div class="flex-1 h-1 bg-black rounded-full overflow-hidden">
+                                <div class="h-full bg-luxury-gold rounded-full progress-fill shadow-[0_0_8px_#C59D5F]"
+                                     style="width: {{ progress_pct }}%">
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-luxury-gold font-bold font-mono">{{ progress_pct }}%</span>
+                        </div>
                     </div>
 
-                    <div class="playlist-scroll max-h-[calc(100vh-200px)] overflow-y-auto">
+                    <div class="playlist-scroll max-h-[calc(100vh-220px)] overflow-y-auto">
                         {% for l in lessons %}
-                        <a href="{% url 'main:lesson_detail' course.slug l.slug %}"
-                           class="lesson-row block border-l-[3px] border-transparent hover:bg-white/5 transition-all p-4 group {% if l.id == lesson.id %}active{% endif %}">
+                        <a href="{% url 'courses:lesson_detail' course.slug l.slug %}"
+                           class="lesson-row block border-l-[3px] border-transparent hover:bg-white/5 transition-all p-4 group
+                           {% if l.id == lesson.id %}active{% endif %}
+                           {% if l.id in completed_ids %}completed{% endif %}">
 
                             <div class="flex items-start gap-3">
-                                <!-- Номер или Иконка -->
-                                <div class="mt-0.5 shrink-0 relative w-5 h-5 flex items-center justify-center">
+                                <!-- Статус-индикатор -->
+                                <div class="mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center">
                                     {% if l.id == lesson.id %}
-                                        <!-- Пульсирующая точка для активного -->
+                                        <!-- Активный: пульс -->
                                         <span class="relative flex h-3 w-3">
-                                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-luxury-gold opacity-75"></span>
-                                          <span class="relative inline-flex rounded-full h-3 w-3 bg-luxury-gold"></span>
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-luxury-gold opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-3 w-3 bg-luxury-gold"></span>
                                         </span>
+                                    {% elif l.id in completed_ids %}
+                                        <!-- Завершённый: галочка -->
+                                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                                        </svg>
                                     {% else %}
+                                        <!-- Обычный: номер -->
                                         <span class="text-luxury-muted text-xs font-mono group-hover:text-white">{{ l.order }}</span>
                                     {% endif %}
                                 </div>
@@ -259,14 +427,14 @@
                                     <h5 class="lesson-title text-sm font-medium text-white/80 group-hover:text-white transition-colors line-clamp-2">
                                         {{ l.title }}
                                     </h5>
-                                    <div class="flex items-center gap-2 mt-1.5">
-                                        {% if l.duration %}
-                                            <span class="text-[10px] text-white/30 bg-white/5 px-1.5 rounded flex items-center gap-1">
-                                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                {{ l.duration }}
-                                            </span>
-                                        {% endif %}
-                                    </div>
+                                    {% if l.duration %}
+                                        <span class="text-[10px] text-white/30 bg-white/5 px-1.5 rounded flex items-center gap-1 mt-1.5 w-fit">
+                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            {{ l.duration }}
+                                        </span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </a>
@@ -279,29 +447,227 @@
     </div>
 </div>
 
+<!-- Toast уведомление -->
+<div id="toast"
+     class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-3 bg-[#1A1816] border border-luxury-gold/30 rounded-full shadow-2xl
+            opacity-0 translate-y-4 transition-all duration-500 pointer-events-none">
+    <span id="toast-icon" class="text-luxury-gold text-lg">✓</span>
+    <span id="toast-text" class="text-white text-sm font-medium"></span>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
+    // ── Табы ────────────────────────────────────────────────────────────────
     function openTab(evt, tabName) {
-        // 1. Скрыть весь контент
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-pane");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].classList.remove("active");
-        }
-
-        // 2. Сбросить стили кнопок
-        tablinks = document.getElementsByClassName("tab-btn");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].classList.remove("text-white", "border-luxury-gold");
-            tablinks[i].classList.add("text-luxury-muted", "border-transparent");
-        }
-
-        // 3. Показать текущий и активировать кнопку
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.remove("text-luxury-muted", "border-transparent");
-        evt.currentTarget.classList.add("text-white", "border-luxury-gold");
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('text-white', 'border-luxury-gold');
+            b.classList.add('text-luxury-muted', 'border-transparent');
+        });
+        document.getElementById(tabName).classList.add('active');
+        evt.currentTarget.classList.remove('text-luxury-muted', 'border-transparent');
+        evt.currentTarget.classList.add('text-white', 'border-luxury-gold');
     }
+
+    // ── Toast ───────────────────────────────────────────────────────────────
+    function showToast(message, icon = '✓', isError = false) {
+        const toast = document.getElementById('toast');
+        const toastText = document.getElementById('toast-text');
+        const toastIcon = document.getElementById('toast-icon');
+
+        toastText.textContent = message;
+        toastIcon.textContent = icon;
+
+        if (isError) {
+            toast.classList.remove('border-luxury-gold/30');
+            toast.classList.add('border-red-500/30');
+            toastIcon.className = 'text-red-400 text-lg';
+        } else {
+            toast.classList.remove('border-red-500/30');
+            toast.classList.add('border-luxury-gold/30');
+            toastIcon.className = 'text-luxury-gold text-lg';
+        }
+
+        toast.classList.remove('opacity-0', 'translate-y-4');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', 'translate-y-4');
+        }, 3000);
+    }
+
+    // ── Завершить урок ──────────────────────────────────────────────────────
+    function completeLesson() {
+        const btn = document.getElementById('complete-btn');
+        if (btn.disabled) return;
+
+        btn.classList.add('loading');
+        btn.disabled = true;
+        btn.innerHTML = `
+            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            Сохраняем...
+        `;
+
+        fetch(btn.dataset.url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Обновить кнопку
+                btn.classList.remove('loading');
+                btn.classList.add('done');
+                btn.innerHTML = `
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Урок завершён
+                `;
+
+                // Обновить прогресс
+                updateProgress(data.progress_pct);
+
+                // Отметить урок в плейлисте
+                markCurrentLessonCompleted();
+
+                showToast('Урок завершён! Продолжайте в том же духе 🎯');
+            } else {
+                resetCompleteBtn();
+                showToast(data.error || 'Ошибка. Попробуйте ещё раз.', '✕', true);
+            }
+        })
+        .catch(() => {
+            resetCompleteBtn();
+            showToast('Ошибка соединения.', '✕', true);
+        });
+    }
+
+    function resetCompleteBtn() {
+        const btn = document.getElementById('complete-btn');
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        btn.innerHTML = `
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Завершить урок
+        `;
+    }
+
+    function updateProgress(pct) {
+        document.getElementById('progress-bar-fill').style.width = pct + '%';
+        document.getElementById('progress-text').textContent = pct + '%';
+    }
+
+    function markCurrentLessonCompleted() {
+        // Найти активную строку в плейлисте и добавить галочку
+        const activeRow = document.querySelector('.lesson-row.active');
+        if (activeRow) {
+            activeRow.classList.add('completed');
+            const indicator = activeRow.querySelector('.animate-ping')?.parentElement;
+            if (indicator) {
+                indicator.outerHTML = `
+                    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                `;
+            }
+        }
+    }
+
+    // ── CSRF token ──────────────────────────────────────────────────────────
+    function getCsrfToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]')?.value
+            || document.cookie.split('; ')
+                .find(row => row.startsWith('csrftoken='))
+                ?.split('=')[1] || '';
+    }
+
+    // ── Drag & Drop ─────────────────────────────────────────────────────────
+    const ALLOWED_EXTS = new Set([
+        '.pdf',
+        '.jpg', '.jpeg', '.png', '.gif', '.webp',
+        '.mp4', '.mov', '.avi', '.mkv', '.webm',
+    ]);
+
+    function getExt(filename) {
+        return filename.slice(filename.lastIndexOf('.')).toLowerCase();
+    }
+
+    function isAllowedFile(file) {
+        return ALLOWED_EXTS.has(getExt(file.name));
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        document.getElementById('drop-zone').classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+        document.getElementById('drop-zone').classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById('drop-zone').classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        if (!isAllowedFile(file)) {
+            showToast('Формат не поддерживается. Разрешены: PDF, изображения и видео.', '⚠️', true);
+            return;
+        }
+        const input = document.getElementById('submission-file-input');
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        showFilePreview(file);
+    }
+
+    function handleFileSelect(input) {
+        if (!input.files[0]) return;
+        if (!isAllowedFile(input.files[0])) {
+            showToast('Формат не поддерживается. Разрешены: PDF, изображения и видео.', '⚠️', true);
+            input.value = '';
+            return;
+        }
+        showFilePreview(input.files[0]);
+    }
+
+    function showFilePreview(file) {
+        document.getElementById('drop-zone-content').classList.add('hidden');
+        const preview = document.getElementById('file-preview');
+        preview.classList.remove('hidden');
+        document.getElementById('file-name').textContent = file.name;
+        document.getElementById('file-size').textContent = formatFileSize(file.size);
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' Б';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' КБ';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' МБ';
+    }
+
+    // ── Валидация формы домашки ─────────────────────────────────────────────
+    document.getElementById('homework-form').addEventListener('submit', function(e) {
+        const fileInput = document.getElementById('submission-file-input');
+        if (!fileInput.files || !fileInput.files[0]) {
+            e.preventDefault();
+            showToast('Выберите файл для отправки', '⚠️', true);
+            return;
+        }
+        const btn = document.getElementById('submit-hw-btn');
+        btn.disabled = true;
+        btn.textContent = 'Отправка...';
+    });
 </script>
 {% endblock %}
