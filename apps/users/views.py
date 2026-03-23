@@ -71,28 +71,52 @@ def logout_view(request):
     messages.info(request, 'Вы успешно вышли из системы')
     return redirect('main:index')
 
-
 @login_required
+@require_http_methods(["GET", "POST"])
 def profile_view(request):
+    from .models import UserProfile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        user = request.user
+
+        user.first_name = request.POST.get('first_name', '').strip()
+        user.last_name  = request.POST.get('last_name', '').strip()
+        user.phone      = request.POST.get('phone', '').strip()
+        user.bio        = request.POST.get('bio', '').strip()
+        user.email_notifications = 'email_notifications' in request.POST
+
+        if 'avatar' in request.FILES:
+            user.avatar = request.FILES['avatar']
+
+        user.save()
+
+        profile.occupation      = request.POST.get('occupation', '').strip()
+        profile.company         = request.POST.get('company', '').strip()
+        profile.website         = request.POST.get('website', '').strip()
+        profile.instagram       = request.POST.get('instagram', '').strip()
+        profile.telegram        = request.POST.get('telegram', '').strip()
+        profile.linkedin        = request.POST.get('linkedin', '').strip()
+        profile.learning_goal   = request.POST.get('learning_goal', '').strip()
+        profile.experience_level = request.POST.get('experience_level', 'beginner')
+        profile.save()
+
+        messages.success(request, 'Профиль успешно обновлён!')
+        return redirect('users:profile')
+
     accesses = CourseAccess.objects.filter(
-        user=request.user,
-        is_active=True
+        user=request.user, is_active=True
     ).select_related('course')
 
     purchases = Purchase.objects.filter(
         user=request.user
     ).select_related('course').order_by('-created_at')[:10]
 
-    from .models import UserProfile
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
-
-    context = {
+    return render(request, 'users/profile.html', {
         'accesses': accesses,
         'purchases': purchases,
         'profile': profile,
-    }
-
-    return render(request, 'users/profile.html', context)
+    })
 
 
 @login_required
