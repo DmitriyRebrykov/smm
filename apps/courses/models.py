@@ -35,6 +35,8 @@ class CourseAccess(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
 
     granted_at = models.DateTimeField('Доступ предоставлен', auto_now_add=True)
+    # expires_at = None означает ВЕЧНЫЙ доступ (покупка)
+    # expires_at = дата означает временный доступ (ручное ограничение через админку)
     expires_at = models.DateTimeField('Доступ истекает', null=True, blank=True)
     is_active = models.BooleanField('Активен', default=True)
 
@@ -50,11 +52,30 @@ class CourseAccess(models.Model):
         return f"{self.user.email} - {self.course.title}"
 
     def has_access(self):
+        """
+        Возвращает True если доступ активен.
+        expires_at=None — вечный доступ (стандартная покупка).
+        expires_at=дата — временный (только если задано вручную в админке).
+        """
         if not self.is_active:
             return False
         if self.expires_at and timezone.now() > self.expires_at:
             return False
         return True
+
+    @classmethod
+    def user_has_access(cls, user, course):
+        """
+        Удобный метод для проверки доступа пользователя к курсу.
+        Используйте его во views вместо ручных filter().
+        """
+        if not user or not user.is_authenticated:
+            return False
+        try:
+            access = cls.objects.get(user=user, course=course)
+            return access.has_access()
+        except cls.DoesNotExist:
+            return False
 
 
 class Purchase(models.Model):
@@ -100,6 +121,7 @@ class Purchase(models.Model):
         return f"Заказ #{self.order_id} - {self.course.title}"
 
     def mark_as_paid(self):
+        """Отмечает покупку как оплаченную и выдаёт вечный доступ к курсу."""
         if self.status == 'success':
             return
 
@@ -107,14 +129,24 @@ class Purchase(models.Model):
         self.paid_at = timezone.now()
         self.save()
 
+        # expires_at намеренно НЕ передаём — None = вечный доступ
         CourseAccess.objects.update_or_create(
             user=self.user,
             course=self.course,
             defaults={
                 'is_active': True,
+                'expires_at': None,   # явно сбрасываем — на случай если запись уже существовала с датой
                 'purchase': self,
             }
         )
+
+        # Отправляем email — в отдельном try/except, чтобы не сломать логику оплаты
+        try:
+            from apps.courses.services.email_service import send_purchase_confirmation
+            send_purchase_confirmation(self)
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"Не удалось отправить email: {e}")
 
 
 class Lesson(models.Model):
@@ -210,11 +242,8 @@ def validate_submission_file(value):
     from django.core.exceptions import ValidationError
 
     ALLOWED_EXTENSIONS = {
-        # PDF
         '.pdf',
-        # Изображения
         '.jpg', '.jpeg', '.png', '.gif', '.webp',
-        # Видео
         '.mp4', '.mov', '.avi', '.mkv', '.webm',
     }
 

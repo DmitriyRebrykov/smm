@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.utils import timezone
 from django.db import transaction
+from django.db.models import Q
 
 from .models import Course, CourseAccess, Purchase, Lesson, LessonProgress, LessonSubmission
 from .services.liqpay_service import get_liqpay_service
@@ -20,46 +21,50 @@ logger = logging.getLogger(__name__)
 def courses_catalog(request):
     courses = Course.objects.filter(is_active=True).order_by('-created_at')
 
-    purchased_ids = []
+    purchased_ids = set()
     if request.user.is_authenticated:
-        purchased_ids = CourseAccess.objects.filter(
-            user=request.user,
-            is_active=True
-        ).values_list('course_id', flat=True)
+        purchased_ids = set(
+            CourseAccess.objects.filter(
+                user=request.user,
+                is_active=True,
+            ).values_list('course_id', flat=True)
+        )
+        # Дополнительно фильтруем — исключаем истёкшие (expires_at в прошлом)
+        expired_ids = set(
+            CourseAccess.objects.filter(
+                user=request.user,
+                is_active=True,
+                expires_at__isnull=False,
+                expires_at__lt=timezone.now(),
+            ).values_list('course_id', flat=True)
+        )
+        purchased_ids -= expired_ids
 
-    context = {
+    return render(request, 'courses/course_catalog.html', {
         'courses': courses,
         'purchased_ids': purchased_ids,
-    }
-    return render(request, 'courses/course_catalog.html', context)
+    })
 
 
 @login_required
 def course_detail(request, slug):
     course = get_object_or_404(Course, slug=slug, is_active=True)
-
-    try:
-        access = CourseAccess.objects.get(user=request.user, course=course)
-        has_access = access.has_access()
-    except CourseAccess.DoesNotExist:
-        has_access = False
+    has_access = CourseAccess.user_has_access(request.user, course)
 
     if has_access:
         lessons = course.lessons.all()
         progress_pct = LessonProgress.get_course_progress(request.user, course)
         completed_ids = LessonProgress.get_completed_ids(request.user, course)
 
-        # Найти первый незавершённый урок для кнопки "Продолжить"
-        next_lesson = None
-        for lesson in lessons:
-            if lesson.id not in completed_ids:
-                next_lesson = lesson
-                break
+        # Первый незавершённый урок для кнопки «Продолжить»
+        next_lesson = next(
+            (lesson for lesson in lessons if lesson.id not in completed_ids),
+            None
+        )
 
         return render(request, 'courses/course_content.html', {
             'course': course,
             'lessons': lessons,
-            'access': access,
             'progress_pct': progress_pct,
             'completed_ids': completed_ids,
             'next_lesson': next_lesson,
@@ -75,13 +80,7 @@ def course_detail(request, slug):
 def initiate_payment(request, slug):
     course = get_object_or_404(Course, slug=slug, is_active=True)
 
-    has_access = CourseAccess.objects.filter(
-        user=request.user,
-        course=course,
-        is_active=True
-    ).exists()
-
-    if has_access:
+    if CourseAccess.user_has_access(request.user, course):
         messages.info(request, 'У вас уже есть доступ к этому курсу')
         return redirect('courses:course_detail', slug=slug)
 
@@ -172,12 +171,12 @@ def payment_callback(request):
         purchase.status = new_status
 
         if liqpay.is_payment_successful(callback_data):
+            # mark_as_paid выдаёт вечный доступ и отправляет email
             purchase.mark_as_paid()
             logger.info(f"Платеж {order_id} успешно обработан")
         else:
+            purchase.save()
             logger.warning(f"Платеж {order_id} имеет статус: {payment_status}")
-
-        purchase.save()
 
     return HttpResponse('OK')
 
@@ -186,22 +185,23 @@ def payment_callback(request):
 def payment_result(request, order_id):
     purchase = get_object_or_404(Purchase, order_id=order_id, user=request.user)
 
-    context = {
-        'purchase': purchase,
-        'course': purchase.course,
-    }
-
     if purchase.status == 'success':
         messages.success(request, 'Оплата прошла успешно! Добро пожаловать на курс.')
         return redirect('courses:course_detail', slug=purchase.course.slug)
 
     elif purchase.status == 'failure':
-        messages.error(request, 'Оплата не прошла. Попробуйте еще раз.')
-        return render(request, 'courses/payment_failed.html', context)
+        messages.error(request, 'Оплата не прошла. Попробуйте ещё раз.')
+        return render(request, 'courses/payment_failed.html', {
+            'purchase': purchase,
+            'course': purchase.course,
+        })
 
     else:
-        messages.info(request, 'Платеж обрабатывается. Подождите немного.')
-        return render(request, 'courses/payment_pending.html', context)
+        messages.info(request, 'Платёж обрабатывается. Подождите немного.')
+        return render(request, 'courses/payment_pending.html', {
+            'purchase': purchase,
+            'course': purchase.course,
+        })
 
 
 @login_required
@@ -209,35 +209,27 @@ def lesson_detail(request, course_slug, lesson_slug):
     course = get_object_or_404(Course, slug=course_slug, is_active=True)
     lesson = get_object_or_404(Lesson, course=course, slug=lesson_slug)
 
+    # Бесплатные уроки доступны всем авторизованным пользователям
     if not lesson.is_free:
-        try:
-            access = CourseAccess.objects.get(user=request.user, course=course)
-            if not access.has_access():
-                messages.error(request, 'У вас нет доступа к этому уроку')
-                return redirect('courses:course_detail', slug=course_slug)
-        except CourseAccess.DoesNotExist:
+        if not CourseAccess.user_has_access(request.user, course):
             messages.error(request, 'Оплатите курс для доступа к урокам')
             return redirect('courses:course_detail', slug=course_slug)
 
     all_lessons = course.lessons.all()
 
-    # Прогресс
     progress_pct = LessonProgress.get_course_progress(request.user, course)
     completed_ids = LessonProgress.get_completed_ids(request.user, course)
 
-    # Текущий статус урока
     lesson_progress, _ = LessonProgress.objects.get_or_create(
         user=request.user,
         lesson=lesson
     )
 
-    # Предыдущий / следующий уроки
     lessons_list = list(all_lessons)
     current_index = next((i for i, l in enumerate(lessons_list) if l.id == lesson.id), None)
     prev_lesson = lessons_list[current_index - 1] if current_index and current_index > 0 else None
     next_lesson = lessons_list[current_index + 1] if current_index is not None and current_index < len(lessons_list) - 1 else None
 
-    # Отправленные работы по этому уроку
     submissions = LessonSubmission.objects.filter(
         user=request.user,
         lesson=lesson
@@ -263,26 +255,19 @@ def complete_lesson(request, course_slug, lesson_slug):
     course = get_object_or_404(Course, slug=course_slug, is_active=True)
     lesson = get_object_or_404(Lesson, course=course, slug=lesson_slug)
 
-    # Проверяем доступ
-    if not lesson.is_free:
-        has_access = CourseAccess.objects.filter(
-            user=request.user, course=course, is_active=True
-        ).exists()
-        if not has_access:
-            return JsonResponse({'error': 'Нет доступа'}, status=403)
+    if not lesson.is_free and not CourseAccess.user_has_access(request.user, course):
+        return JsonResponse({'error': 'Нет доступа'}, status=403)
 
-    progress, created = LessonProgress.objects.get_or_create(
+    progress, _ = LessonProgress.objects.get_or_create(
         user=request.user,
         lesson=lesson
     )
     progress.mark_completed()
 
-    new_progress_pct = LessonProgress.get_course_progress(request.user, course)
-
     return JsonResponse({
         'success': True,
         'lesson_id': lesson.id,
-        'progress_pct': new_progress_pct,
+        'progress_pct': LessonProgress.get_course_progress(request.user, course),
         'message': 'Урок завершён!'
     })
 
@@ -294,14 +279,9 @@ def submit_homework(request, course_slug, lesson_slug):
     course = get_object_or_404(Course, slug=course_slug, is_active=True)
     lesson = get_object_or_404(Lesson, course=course, slug=lesson_slug)
 
-    # Проверяем доступ
-    if not lesson.is_free:
-        has_access = CourseAccess.objects.filter(
-            user=request.user, course=course, is_active=True
-        ).exists()
-        if not has_access:
-            messages.error(request, 'Нет доступа к уроку')
-            return redirect('courses:course_detail', slug=course_slug)
+    if not lesson.is_free and not CourseAccess.user_has_access(request.user, course):
+        messages.error(request, 'Нет доступа к уроку')
+        return redirect('courses:course_detail', slug=course_slug)
 
     uploaded_file = request.FILES.get('submission_file')
     comment = request.POST.get('comment', '').strip()
@@ -310,19 +290,14 @@ def submit_homework(request, course_slug, lesson_slug):
         messages.error(request, 'Выберите файл для загрузки')
         return redirect('courses:lesson_detail', course_slug=course_slug, lesson_slug=lesson_slug)
 
-    # Валидация расширения
     import os
     ALLOWED_EXTENSIONS = {'.pdf', '.jpg', '.jpeg', '.png', '.gif', '.webp',
                           '.mp4', '.mov', '.avi', '.mkv', '.webm'}
     ext = os.path.splitext(uploaded_file.name)[1].lower()
     if ext not in ALLOWED_EXTENSIONS:
-        messages.error(
-            request,
-            f'Формат "{ext}" не поддерживается. Разрешены: PDF, изображения и видео.'
-        )
+        messages.error(request, f'Формат "{ext}" не поддерживается.')
         return redirect('courses:lesson_detail', course_slug=course_slug, lesson_slug=lesson_slug)
 
-    # Ограничение размера: 50 МБ
     if uploaded_file.size > 50 * 1024 * 1024:
         messages.error(request, 'Файл слишком большой. Максимум 50 МБ.')
         return redirect('courses:lesson_detail', course_slug=course_slug, lesson_slug=lesson_slug)
@@ -342,17 +317,19 @@ def submit_homework(request, course_slug, lesson_slug):
 def my_courses(request):
     accesses = CourseAccess.objects.filter(
         user=request.user,
-        is_active=True
-    ).select_related('course')
+        is_active=True,
+    ).select_related('course').filter(
+        # Исключаем истёкшие временные доступы
+        Q(expires_at__isnull=True) | Q(expires_at__gt=timezone.now())
+    )
 
-    # Добавляем прогресс к каждому курсу
-    courses_with_progress = []
-    for access in accesses:
-        progress = LessonProgress.get_course_progress(request.user, access.course)
-        courses_with_progress.append({
+    courses_with_progress = [
+        {
             'access': access,
-            'progress': progress,
-        })
+            'progress': LessonProgress.get_course_progress(request.user, access.course),
+        }
+        for access in accesses
+    ]
 
     return render(request, 'courses/my_courses.html', {
         'accesses': accesses,
