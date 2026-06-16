@@ -94,17 +94,12 @@
 
             <!-- Video 1 -->
             <div class="video-card min-w-[280px] h-[500px] bg-luxury-black border border-white/10 rounded-xl relative overflow-hidden group transition-all duration-300 snap-center cursor-pointer">
-                <!-- Прев'ю (заглушка) -->
                 <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
-
-                <!-- Play Button -->
                 <div class="absolute inset-0 flex items-center justify-center">
                     <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
                         <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </div>
                 </div>
-
-                <!-- Info Overlay -->
                 <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
                     <p class="text-white font-bold text-lg">Марія</p>
                     <p class="text-luxury-gold text-sm">Заробила $800 на курсі</p>
@@ -139,25 +134,11 @@
                 </div>
             </div>
 
-            <!-- Video 4 -->
-            <div class="video-card min-w-[280px] h-[500px] bg-luxury-black border border-white/10 rounded-xl relative overflow-hidden group transition-all duration-300 snap-center cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
-                        <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </div>
-                </div>
-                <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
-                    <p class="text-white font-bold text-lg">Оксана</p>
-                    <p class="text-luxury-gold text-sm">З нуля до профі</p>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>
 
-<!-- Text Reviews Grid -->
+<!-- Text Reviews Grid (Динамічна сітка з бази даних) -->
 <section class="py-24 bg-luxury-black relative">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-16 uppercase tracking-wider">
@@ -166,62 +147,47 @@
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            <!-- Review Card 1 -->
-            <div class="bg-luxury-card border border-white/5 p-8 hover:border-luxury-gold transition-all duration-300 group">
-                <div class="flex items-center gap-4 mb-6">
-                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
-                    <div>
-                        <h4 class="text-white font-bold">Олена В.</h4>
-                        <p class="text-luxury-muted text-xs">Ніша: Б'юті майстер</p>
-                    </div>
-                    <div class="ml-auto text-luxury-gold">★★★★★</div>
-                </div>
-                <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
-                    "Я думала, що SMM — це просто постити фоточки. Софія повністю перевернула моє мислення. Після модуля зі стратегії я підняла ціни в салоні на 30% і запис тепер повний!"
-                </p>
-                <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
-                    <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
-                    <p class="text-white font-bold">+1500 підписників за місяць</p>
-                </div>
-            </div>
+            {% for review in reviews %}
+            <div class="bg-luxury-card border border-white/5 p-8 hover:border-luxury-gold transition-all duration-300 flex flex-col justify-between group relative">
 
-            <!-- Review Card 2 -->
-            <div class="bg-luxury-card border border-white/5 p-8 hover:border-luxury-gold transition-all duration-300 group">
-                <div class="flex items-center gap-4 mb-6">
-                    <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
-                    <div>
-                        <h4 class="text-white font-bold">Вікторія С.</h4>
-                        <p class="text-luxury-muted text-xs">Ніша: Студентка</p>
-                    </div>
-                    <div class="ml-auto text-luxury-gold">★★★★★</div>
-                </div>
-                <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
-                    "Курс окупився ще під час навчання. Знайшла першого клієнта на ведення за $300 уже на 3-му тижні. Матеріали дуже структуровані, без води."
-                </p>
-                <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
-                    <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
-                    <p class="text-white font-bold">Перший клієнт на $300</p>
-                </div>
-            </div>
+                <!-- Декоративні лапки -->
+                <div class="text-luxury-gold/5 text-7xl font-serif absolute top-2 right-6 pointer-events-none select-none">“</div>
 
-            <!-- Review Card 3 -->
-            <div class="bg-luxury-card border border-white/5 p-8 hover:border-luxury-gold transition-all duration-300 group">
-                <div class="flex items-center gap-4 mb-6">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
-                    <div>
-                        <h4 class="text-white font-bold">Максим Д.</h4>
-                        <p class="text-luxury-muted text-xs">Ніша: Таргетолог</p>
+                <div>
+                    <!-- Інформація про автора -->
+                    <div class="flex items-center gap-4 mb-6 relative z-10">
+                        {% if review.avatar %}
+                            <img src="{{ review.avatar.url }}" alt="{{ review.name }}" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
+                        {% else %}
+                            <div class="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center border border-luxury-gold text-luxury-gold font-bold text-lg">
+                                {{ review.name|slice:":1" }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h4 class="text-white font-bold">{{ review.name }}</h4>
+                            <p class="text-luxury-muted text-xs">Ніша: {{ review.niche }}</p>
+                        </div>
+                        <div class="ml-auto text-luxury-gold select-none">★★★★★</div>
                     </div>
-                    <div class="ml-auto text-luxury-gold">★★★★★</div>
+
+                    <!-- Текст відгуку -->
+                    <p class="text-luxury-text text-sm leading-relaxed mb-6 italic relative z-10">
+                        "{{ review.text }}"
+                    </p>
                 </div>
-                <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
-                    "Прийшов підтягнути знання з контенту, а отримав повноцінну професію контент-мейкера. Тепер продаю послуги комплексно: таргет + контент."
-                </p>
-                <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
-                    <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
-                    <p class="text-white font-bold">Середній чек зріс удвічі</p>
+
+                <!-- Блок фіксації результату -->
+                <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold mt-auto">
+                    <p class="text-luxury-gold text-xs font-bold uppercase mb-1 font-mono tracking-wider">Результат:</p>
+                    <p class="text-white font-bold text-sm">{{ review.result }}</p>
                 </div>
+
             </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-luxury-muted italic">Наразі немає текстових відгуків.</p>
+            </div>
+            {% endfor %}
 
         </div>
     </div>

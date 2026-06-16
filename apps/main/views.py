@@ -6,16 +6,33 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import ContactRequest
 from .utils import send_telegram_notification
+from django.shortcuts import render
+from .models import Case, Review
 
 def index(request):
     return render(request, 'main/main.html')
 
+
 def cases(request):
-    return render(request, 'main/cases.html')
+    active_cases = Case.objects.filter(is_active=True)
+    active_reviews = Review.objects.filter(is_active=True)
+
+    context = {
+        'cases': active_cases,
+        'reviews': active_reviews,
+    }
+
+    return render(request, 'main/cases.html', context)
+
 
 def reviews(request):
-    return render(request, 'main/reviews.html')
+    active_reviews = Review.objects.filter(is_active=True)
 
+    context = {
+        'reviews': active_reviews,
+    }
+
+    return render(request, 'main/reviews.html', context)
 @require_http_methods(["POST"])
 def submit_contact_form(request):
     try:

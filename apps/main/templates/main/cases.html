@@ -1,3 +1,4 @@
+
 {% extends 'main/base.html' %}
 {% load static %}
 
@@ -51,7 +52,6 @@
 <!-- Filter Section (Фільтри) -->
 <section class="sticky top-20 z-40 bg-luxury-black/95 backdrop-blur-md border-b border-white/5 py-4 transition-all" id="filter-bar">
     <div class="container mx-auto px-4">
-        <!-- Скроллбар прихований, але дозволяє скролити горизонтально на мобільних -->
         <div class="flex flex-nowrap md:flex-wrap overflow-x-auto md:justify-center gap-3 md:gap-4 pb-2 md:pb-0 scrollbar-hide">
             <button class="filter-btn active whitespace-nowrap px-6 py-2 border border-white/10 rounded-full text-sm uppercase tracking-widest transition-all duration-300 hover:border-luxury-gold text-luxury-text hover:text-luxury-gold" data-filter="all">
                 Усі проєкти
@@ -69,184 +69,119 @@
     </div>
 </section>
 
-<!-- Cases Grid (Сітка проєктів) -->
-<section class="py-20 bg-luxury-black min-h-screen">
+<!-- Cases Grid (Сітка проєктів з бази даних) -->
+<section class="py-20 bg-luxury-black min-h-[50vh]">
     <div class="container mx-auto px-4">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="cases-container">
 
-            <!-- Case 1: Clothing Store -->
-            <div class="case-item group fade-in-up" data-category="smm content">
+            {% for case in cases %}
+            <div class="case-item group fade-in-up" data-category="{{ case.category }}">
                 <div class="bg-luxury-card border border-white/5 hover:border-luxury-gold transition-all duration-500 overflow-hidden relative h-full flex flex-col">
+
                     <!-- Image Wrapper -->
                     <div class="h-72 overflow-hidden relative border-b border-white/5">
                         <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                             alt="Clothing Store"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                        {% if case.image %}
+                            <img src="{{ case.image.url }}" alt="{{ case.title }}"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
+                        {% endif %}
 
                         <!-- Floating Category Tag -->
                         <div class="absolute top-4 left-4 bg-luxury-black/80 backdrop-blur text-luxury-gold text-[10px] font-bold px-3 py-1 uppercase tracking-widest border border-luxury-gold/30 z-20">
-                            E-commerce
+                            {{ case.niche }}
                         </div>
                     </div>
 
                     <!-- Content -->
                     <div class="p-8 flex-grow flex flex-col justify-between">
                         <div>
-                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-luxury-gold transition-colors">Магазин одягу</h3>
-                            <p class="text-luxury-muted text-sm mb-6 leading-relaxed line-clamp-3">Повний ребрендинг акаунту. Впровадження AI-моделей для каталогу, що скоротило витрати на зйомки втричі.</p>
+                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-luxury-gold transition-colors">
+                                {{ case.title }}
+                            </h3>
+                            <p class="text-luxury-muted text-sm mb-6 leading-relaxed line-clamp-3">
+                                {{ case.description }}
+                            </p>
                         </div>
 
                         <!-- Metrics -->
                         <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-auto">
                             <div>
-                                <div class="text-luxury-gold font-bold text-xl">+150%</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Продажі</div>
+                                <div class="text-luxury-gold font-bold text-xl">{{ case.metric_value }}</div>
+                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">{{ case.metric_label }}</div>
                             </div>
                             <div class="text-right">
-                                <div class="text-white font-bold text-xl">3 міс</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Термін</div>
+                                <div class="text-white font-bold text-xl">{{ case.secondary_value }}</div>
+                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">{{ case.secondary_label }}</div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
-
-            <!-- Case 2: Fitness -->
-            <div class="case-item group fade-in-up" data-category="smm content">
-                <div class="bg-luxury-card border border-white/5 hover:border-luxury-gold transition-all duration-500 overflow-hidden relative h-full flex flex-col">
-                    <div class="h-72 overflow-hidden relative border-b border-white/5">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                             alt="Fitness Trainer"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
-                         <div class="absolute top-4 left-4 bg-luxury-black/80 backdrop-blur text-luxury-gold text-[10px] font-bold px-3 py-1 uppercase tracking-widest border border-luxury-gold/30 z-20">
-                            Особистий бренд
-                        </div>
-                    </div>
-
-                    <div class="p-8 flex-grow flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-luxury-gold transition-colors">Фітнес Тренер</h3>
-                            <p class="text-luxury-muted text-sm mb-6 leading-relaxed line-clamp-3">Упаковка профілю для продажу курсу. Сценарії прогрівів та монтаж експертних Reels, які залетіли в рекомендації.</p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-auto">
-                            <div>
-                                <div class="text-luxury-gold font-bold text-xl">x5</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Підписники</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-white font-bold text-xl">$12k</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Запуск</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-luxury-muted italic">Наразі немає доданих кейсів.</p>
             </div>
-
-            <!-- Case 3: IT Startup -->
-            <div class="case-item group fade-in-up" data-category="target">
-                <div class="bg-luxury-card border border-white/5 hover:border-luxury-gold transition-all duration-500 overflow-hidden relative h-full flex flex-col">
-                    <div class="h-72 overflow-hidden relative border-b border-white/5">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                             alt="IT Startup"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
-                        <div class="absolute top-4 left-4 bg-luxury-black/80 backdrop-blur text-luxury-gold text-[10px] font-bold px-3 py-1 uppercase tracking-widest border border-luxury-gold/30 z-20">
-                            B2B / Tech
-                        </div>
-                    </div>
-
-                    <div class="p-8 flex-grow flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-luxury-gold transition-colors">IT Стартап</h3>
-                            <p class="text-luxury-muted text-sm mb-6 leading-relaxed line-clamp-3">Лідогенерація через LinkedIn та таргетовану рекламу. Створення іміджу експертів на ринку США.</p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-auto">
-                            <div>
-                                <div class="text-luxury-gold font-bold text-xl">50+</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">B2B Лідів</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-white font-bold text-xl">2 міс</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Термін</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Case 4: Restaurant -->
-            <div class="case-item group fade-in-up" data-category="content smm">
-                <div class="bg-luxury-card border border-white/5 hover:border-luxury-gold transition-all duration-500 overflow-hidden relative h-full flex flex-col">
-                    <div class="h-72 overflow-hidden relative border-b border-white/5">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                             alt="Restaurant"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
-                        <div class="absolute top-4 left-4 bg-luxury-black/80 backdrop-blur text-luxury-gold text-[10px] font-bold px-3 py-1 uppercase tracking-widest border border-luxury-gold/30 z-20">
-                            HoReCa
-                        </div>
-                    </div>
-
-                    <div class="p-8 flex-grow flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-luxury-gold transition-colors">Ресторан Azia</h3>
-                            <p class="text-luxury-muted text-sm mb-6 leading-relaxed line-clamp-3">Створення "вірусного" меню в TikTok. Робота з блогерами та UGC контентом. Повна посадка у вихідні.</p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-auto">
-                            <div>
-                                <div class="text-luxury-gold font-bold text-xl">1M+</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Охоплень</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-white font-bold text-xl">Sold Out</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Бронь</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-             <!-- Case 5: Beauty Salon -->
-             <div class="case-item group fade-in-up" data-category="target">
-                <div class="bg-luxury-card border border-white/5 hover:border-luxury-gold transition-all duration-500 overflow-hidden relative h-full flex flex-col">
-                    <div class="h-72 overflow-hidden relative border-b border-white/5">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                             alt="Beauty Salon"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0">
-                        <div class="absolute top-4 left-4 bg-luxury-black/80 backdrop-blur text-luxury-gold text-[10px] font-bold px-3 py-1 uppercase tracking-widest border border-luxury-gold/30 z-20">
-                            Beauty
-                        </div>
-                    </div>
-
-                    <div class="p-8 flex-grow flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-luxury-gold transition-colors">Салон Краси</h3>
-                            <p class="text-luxury-muted text-sm mb-6 leading-relaxed line-clamp-3">Таргетована реклама на локальну аудиторію. Налаштування автоворонки запису в Direct.</p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-auto">
-                            <div>
-                                <div class="text-luxury-gold font-bold text-xl">$3.5</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Ціна ліда</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-white font-bold text-xl">145</div>
-                                <div class="text-luxury-muted text-[10px] uppercase tracking-wider">Записів</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
 
         </div>
     </div>
 </section>
+
+<!-- Reviews Section (Нова секція відгуків) -->
+{% if reviews %}
+<section class="py-24 bg-[#141210] border-t border-white/5">
+    <div class="container mx-auto px-4">
+
+        <div class="mb-16 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold font-montserrat text-white uppercase tracking-wider">
+                Відгуки <span class="text-luxury-gold">Клієнтів</span>
+            </h2>
+            <p class="text-luxury-muted text-sm mt-3 font-light tracking-wide">Що говорять про співпрацю та спільні результати</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for review in reviews %}
+            <div class="bg-luxury-card border border-white/5 p-8 flex flex-col justify-between relative group hover:border-luxury-gold/30 transition-all duration-300">
+                <div>
+                    <!-- Квота-декор -->
+                    <div class="text-luxury-gold/10 text-7xl font-serif absolute top-2 right-6 pointer-events-none select-none">“</div>
+
+                    <!-- Текст відгуку -->
+                    <p class="text-luxury-text text-sm leading-relaxed mb-6 italic relative z-10">
+                        "{{ review.text }}"
+                    </p>
+                </div>
+
+                <!-- Автор та фіксація результату -->
+                <div class="border-t border-white/5 pt-6 mt-auto">
+                    <div class="flex items-center gap-4 mb-3">
+                        {% if review.avatar %}
+                            <img src="{{ review.avatar.url }}" alt="{{ review.name }}" class="w-12 h-12 rounded-full object-cover border border-white/10">
+                        {% else %}
+                            <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10 text-luxury-gold font-bold text-sm">
+                                {{ review.name|slice:":1" }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h4 class="text-white font-bold text-sm">{{ review.name }}</h4>
+                            <p class="text-luxury-muted text-xs mt-0.5">{{ review.niche }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Результат відгуку -->
+                    <div class="bg-luxury-black/40 border border-luxury-gold/10 px-4 py-2 rounded-sm text-center">
+                        <span class="text-xs text-luxury-gold font-mono uppercase tracking-wider block mb-0.5">Результат:</span>
+                        <span class="text-white font-medium text-xs">{{ review.result }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+{% endif %}
 
 <!-- CTA Section (Заклик до дії) -->
 <section class="py-24 bg-luxury-card relative overflow-hidden border-t border-white/5">
@@ -287,7 +222,7 @@
                     item.classList.remove('fade-in-up');
                     void item.offsetWidth; // Trigger reflow для перезапуску анімації
 
-                    if (filterValue === 'all' || item.getAttribute('data-category').includes(filterValue)) {
+                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
                         item.style.display = 'block';
                         item.classList.add('fade-in-up'); // Додаємо анімацію
                     } else {
