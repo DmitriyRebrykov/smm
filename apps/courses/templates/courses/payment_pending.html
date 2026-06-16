@@ -1,22 +1,22 @@
 {% extends 'main/base.html' %}
 
-{% block title %}Обработка платежа | Sofia SMM{% endblock %}
+{% block title %}Обробка платежу | Sofia SMM{% endblock %}
 
 {% block content %}
 <div class="min-h-screen bg-luxury-black pt-24 pb-12 flex items-center">
     <div class="container mx-auto px-4 max-w-2xl text-center">
         <div class="bg-luxury-card border border-white/5 p-12">
             <div class="text-6xl mb-6">⏳</div>
-            <h1 class="text-3xl font-bold text-white mb-4">Платеж обрабатывается</h1>
+            <h1 class="text-3xl font-bold text-white mb-4">Платіж обробляється</h1>
             <p class="text-luxury-muted mb-8">
-                Ваш платеж находится в обработке. Это может занять несколько минут.
+                Ваш платіж знаходиться в обробці. Це може зайняти кілька хвилин.
             </p>
             <p class="text-luxury-muted text-sm mb-6">
-                Номер заказа: <span class="text-luxury-gold font-mono">{{ purchase.order_id }}</span>
+                Номер замовлення: <span class="text-luxury-gold font-mono">{{ purchase.order_id }}</span>
             </p>
             <a href="{% url 'users:profile' %}"
                class="inline-block px-8 py-3 border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black font-bold uppercase tracking-widest text-sm transition-all">
-                Перейти в профиль
+                Перейти до профілю
             </a>
         </div>
     </div>

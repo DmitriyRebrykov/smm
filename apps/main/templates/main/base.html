@@ -1,18 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Sofia Shliaptseva | SMM Portfolio{% endblock %}</title>
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind Config (Luxury Theme) -->
     <script>
         tailwind.config = {
             theme: {
@@ -33,7 +30,6 @@
         }
     </script>
 
-    <!-- Global Styles -->
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -72,17 +68,13 @@
 </head>
 <body class="bg-luxury-black text-luxury-text smooth-scroll overflow-x-hidden flex flex-col min-h-screen">
 
-    <!-- Header -->
     <header class="sticky top-0 z-50 bg-luxury-black/90 backdrop-blur-md border-b border-white/5">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <!-- Logo -->
             <a href="/" class="text-2xl font-bold tracking-wider text-luxury-text hover:text-white transition-colors">
                 SOFIA<span class="text-luxury-gold">.SMM</span>
             </a>
 
-            <!-- User Info + Burger -->
             <div class="flex items-center gap-4">
-                <!-- User Info (если авторизован) -->
                 {% if user.is_authenticated %}
                     <a href="{% url 'users:profile' %}" class="hidden md:flex items-center gap-2 text-luxury-muted hover:text-luxury-gold transition-colors">
                         <div class="w-8 h-8 rounded-full bg-luxury-gold/20 border border-luxury-gold flex items-center justify-center">
@@ -92,11 +84,10 @@
                     </a>
                 {% else %}
                     <a href="{% url 'users:login' %}" class="hidden md:block text-luxury-muted hover:text-luxury-gold transition-colors text-sm font-medium">
-                        Войти
+                        Увійти
                     </a>
                 {% endif %}
 
-                <!-- Burger Button -->
                 <button id="burger-btn" class="text-luxury-text hover:text-luxury-gold p-2 rounded-md transition-colors">
                     <svg id="menu-icon" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -106,7 +97,6 @@
         </div>
     </header>
 
-    <!-- Slide-out Menu -->
     <div id="menu-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 opacity-0 invisible transition-all duration-300"></div>
 
     <div id="slide-menu" class="fixed top-0 right-0 h-full w-80 bg-luxury-card z-50 transform translate-x-full transition-transform duration-300 ease-in-out border-l border-white/5">
@@ -120,7 +110,6 @@
                 </button>
             </div>
 
-            <!-- User Info в меню (мобильная версия) -->
             {% if user.is_authenticated %}
                 <div class="p-6 border-b border-white/5">
                     <div class="flex items-center gap-3 mb-4">
@@ -133,36 +122,34 @@
                         </div>
                     </div>
                     <a href="{% url 'users:profile' %}" onclick="toggleMenu()" class="block w-full text-center bg-luxury-gold hover:bg-white text-black px-4 py-2 rounded-sm transition-all uppercase tracking-widest text-xs font-bold">
-                        Мой профиль
+                        Мій профіль
                     </a>
                 </div>
             {% endif %}
 
-            <!-- Navigation Links -->
             <nav class="flex-1 p-6 space-y-2">
-                <a href="/#about" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Обо мне</a>
-                <a href="/#services" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Услуги</a>
-                <a href="{% url 'courses:course_catalog' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Курсы</a>
+                <a href="/#about" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Про мене</a>
+                <a href="/#services" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Послуги</a>
+                <a href="{% url 'courses:course_catalog' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Курси</a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'courses:my_courses' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium border border-luxury-gold/30 mt-4">Мои курсы</a>
+                    <a href="{% url 'courses:my_courses' %}" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium border border-luxury-gold/30 mt-4">Мої курси</a>
                 {% endif %}
 
-                <a href="/#contact" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Контакты</a>
+                <a href="/#contact" onclick="toggleMenu()" class="block w-full text-left text-luxury-text hover:text-luxury-black hover:bg-luxury-gold px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">Контакти</a>
             </nav>
 
-            <!-- Menu Footer -->
             <div class="p-6 border-t border-white/5">
                 {% if user.is_authenticated %}
                     <a href="{% url 'users:logout' %}" class="block w-full text-center bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">
-                        Выйти
+                        Вийти
                     </a>
                 {% else %}
                     <div class="space-y-2">
                         <a href="{% url 'users:login' %}" onclick="toggleMenu()" class="block w-full text-center border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">
-                            Войти
+                            Увійти
                         </a>
                         <a href="{% url 'users:register' %}" onclick="toggleMenu()" class="block w-full text-center bg-luxury-gold hover:bg-white text-black px-4 py-3 rounded-md transition-all uppercase tracking-widest text-sm font-medium">
-                            Регистрация
+                            Реєстрація
                         </a>
                     </div>
                 {% endif %}
@@ -170,19 +157,16 @@
         </div>
     </div>
 
-    <!-- Main Content Block -->
     <main class="flex-grow">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
     <footer class="bg-luxury-black border-t border-white/5 py-8 text-center mt-auto">
         <div class="container mx-auto px-4">
             <p class="text-luxury-muted text-sm">© 2026 Shliaptseva Sofia. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Core Scripts -->
     <script>
         // Menu Logic
         const burgerBtn = document.getElementById('burger-btn');

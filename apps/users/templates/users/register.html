@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %}Регистрация | Sofia SMM{% endblock %}
+{% block title %}Реєстрація | Sofia SMM{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -17,14 +17,13 @@
     <div class="container mx-auto px-4">
         <div class="max-w-md mx-auto">
 
-            <!-- Заголовок -->
             <div class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-white mb-3">Регистрация</h1>
-                <p class="text-luxury-muted">Создайте аккаунт для доступа к курсам</p>
+                <h1 class="text-4xl font-bold text-white mb-3">Реєстрація</h1>
+                <p class="text-luxury-muted">Створіть акаунт для доступу до курсів</p>
             </div>
 
             <div class="bg-luxury-card border border-white/5 p-8">
-                
+
                 {% if messages %}
                     <div class="mb-6 space-y-2">
                         {% for message in messages %}
@@ -39,7 +38,7 @@
                     {% csrf_token %}
                     <div>
                         <label class="block text-luxury-muted text-sm font-medium mb-2">
-                            Ваше имя <span class="text-luxury-gold">*</span>
+                            Ваше ім'я <span class="text-luxury-gold">*</span>
                         </label>
                         {{ form.first_name }}
                         {% if form.first_name.errors %}
@@ -65,12 +64,12 @@
                         {% if form.password1.errors %}
                             <p class="text-red-400 text-xs mt-1">{{ form.password1.errors.0 }}</p>
                         {% endif %}
-                        <p class="text-luxury-muted text-xs mt-1">Минимум 6 символов</p>
+                        <p class="text-luxury-muted text-xs mt-1">Мінімум 6 символів</p>
                     </div>
 
                     <div>
                         <label class="block text-luxury-muted text-sm font-medium mb-2">
-                            Повторите пароль <span class="text-luxury-gold">*</span>
+                            Повторіть пароль <span class="text-luxury-gold">*</span>
                         </label>
                         {{ form.password2 }}
                         {% if form.password2.errors %}
@@ -79,10 +78,10 @@
                     </div>
 
                     <button
-                        type="submit" 
+                        type="submit"
                         class="w-full bg-luxury-gold hover:bg-white text-black font-bold py-4 uppercase tracking-widest text-sm transition-all duration-300"
                     >
-                        Зарегистрироваться
+                        Зареєструватися
                     </button>
 
                 </form>
@@ -92,15 +91,15 @@
                         <div class="w-full border-t border-white/10"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-4 bg-luxury-card text-luxury-muted">или</span>
+                        <span class="px-4 bg-luxury-card text-luxury-muted">або</span>
                     </div>
                 </div>
 
                 <div class="text-center">
                     <p class="text-luxury-muted text-sm">
-                        Уже есть аккаунт? 
+                        Вже є акаунт?
                         <a href="{% url 'users:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="text-luxury-gold hover:text-white transition-colors font-medium">
-                            Войти
+                            Увійти
                         </a>
                     </p>
                 </div>
@@ -109,8 +108,8 @@
 
             <div class="mt-6 text-center">
                 <p class="text-luxury-muted text-xs">
-                    Регистрируясь, вы принимаете 
-                    <a href="#" class="text-luxury-gold hover:underline">политику конфиденциальности</a>
+                    Реєструючись, ви приймаєте
+                    <a href="#" class="text-luxury-gold hover:underline">політику конфіденційності</a>
                 </p>
             </div>
 

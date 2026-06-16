@@ -1,11 +1,11 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %}Отзывы учеников | Sofia SMM Revolution{% endblock %}
+{% block title %}Відгуки учнів | Sofia SMM Revolution{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Стилизация скроллбара для видео-отзывов */
+    /* Стилізація скроллбару для відео-відгуків */
     .stories-scroll::-webkit-scrollbar {
         height: 4px;
     }
@@ -17,13 +17,13 @@
         border-radius: 2px;
     }
 
-    /* Эффект свечения для видео-карточек */
+    /* Ефект світіння для відео-карток */
     .video-card:hover {
         box-shadow: 0 0 30px rgba(197, 157, 95, 0.2);
         border-color: #C59D5F;
     }
 
-    /* Стилизация "Сообщения в Direct" для скриншотов */
+    /* Стилізація "Повідомлення в Direct" для скриншотів */
     .dm-bubble {
         background: #262626;
         border-radius: 12px;
@@ -47,35 +47,35 @@
 
 <!-- Hero Section -->
 <section class="relative pt-32 pb-16 md:pt-40 md:pb-20 overflow-hidden bg-luxury-black">
-    <!-- Фоновое свечение -->
+    <!-- Фонове світіння -->
     <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-luxury-gold/5 rounded-full blur-[120px] pointer-events-none -translate-x-1/3 -translate-y-1/3"></div>
     <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-luxury-gold/5 rounded-full blur-[100px] pointer-events-none translate-x-1/3 translate-y-1/3"></div>
 
     <div class="container mx-auto px-4 relative z-10 text-center">
         <h1 class="text-4xl md:text-6xl font-bold font-montserrat text-white mb-6 uppercase tracking-wider">
-            Истории <span class="text-luxury-gold">Успеха</span>
+            Історії <span class="text-luxury-gold">Успіху</span>
         </h1>
         <p class="text-luxury-muted text-lg max-w-2xl mx-auto font-light leading-relaxed mb-10">
-            Лучшая оценка моей работы — это результаты моих учеников. От первых клиентов до выхода на $2000+ в месяц.
+            Найкраща оцінка моєї роботи — це результати моїх учнів. Від перших клієнтів до виходу на $2000+ на місяць.
         </p>
 
         <!-- Stats Grid -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto border-t border-b border-white/10 py-8">
             <div>
                 <div class="text-3xl md:text-4xl font-bold text-white mb-1">500+</div>
-                <div class="text-luxury-gold text-xs uppercase tracking-widest">Учеников</div>
+                <div class="text-luxury-gold text-xs uppercase tracking-widest">Учнів</div>
             </div>
             <div>
                 <div class="text-3xl md:text-4xl font-bold text-white mb-1">98%</div>
-                <div class="text-luxury-gold text-xs uppercase tracking-widest">Довольны</div>
+                <div class="text-luxury-gold text-xs uppercase tracking-widest">Задоволені</div>
             </div>
             <div>
                 <div class="text-3xl md:text-4xl font-bold text-white mb-1">$50k+</div>
-                <div class="text-luxury-gold text-xs uppercase tracking-widest">Заработали ученики</div>
+                <div class="text-luxury-gold text-xs uppercase tracking-widest">Заробили учні</div>
             </div>
             <div>
                 <div class="text-3xl md:text-4xl font-bold text-white mb-1">4.9</div>
-                <div class="text-luxury-gold text-xs uppercase tracking-widest">Рейтинг курса</div>
+                <div class="text-luxury-gold text-xs uppercase tracking-widest">Рейтинг курсу</div>
             </div>
         </div>
     </div>
@@ -86,15 +86,15 @@
     <div class="container mx-auto px-4">
         <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
             <span class="w-2 h-8 bg-luxury-gold block"></span>
-            Видео-отзывы
+            Відеовідгуки
         </h2>
 
-        <!-- Горизонтальный скролл -->
+        <!-- Горизонтальний скролл -->
         <div class="stories-scroll flex gap-6 overflow-x-auto pb-8 snap-x">
 
             <!-- Video 1 -->
             <div class="video-card min-w-[280px] h-[500px] bg-luxury-black border border-white/10 rounded-xl relative overflow-hidden group transition-all duration-300 snap-center cursor-pointer">
-                <!-- Превью (заглушка) -->
+                <!-- Прев'ю (заглушка) -->
                 <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
 
                 <!-- Play Button -->
@@ -106,8 +106,8 @@
 
                 <!-- Info Overlay -->
                 <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
-                    <p class="text-white font-bold text-lg">Мария</p>
-                    <p class="text-luxury-gold text-sm">Заработала $800 на курсе</p>
+                    <p class="text-white font-bold text-lg">Марія</p>
+                    <p class="text-luxury-gold text-sm">Заробила $800 на курсі</p>
                 </div>
             </div>
 
@@ -120,8 +120,8 @@
                     </div>
                 </div>
                 <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
-                    <p class="text-white font-bold text-lg">Алина</p>
-                    <p class="text-luxury-gold text-sm">Ушла из офиса в SMM</p>
+                    <p class="text-white font-bold text-lg">Аліна</p>
+                    <p class="text-luxury-gold text-sm">Пішла з офісу в SMM</p>
                 </div>
             </div>
 
@@ -134,8 +134,8 @@
                     </div>
                 </div>
                 <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
-                    <p class="text-white font-bold text-lg">Кристина</p>
-                    <p class="text-luxury-gold text-sm">Нашла клиента в Дубае</p>
+                    <p class="text-white font-bold text-lg">Крістіна</p>
+                    <p class="text-luxury-gold text-sm">Знайшла клієнта в Дубаї</p>
                 </div>
             </div>
 
@@ -149,7 +149,7 @@
                 </div>
                 <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
                     <p class="text-white font-bold text-lg">Оксана</p>
-                    <p class="text-luxury-gold text-sm">С нуля до профи</p>
+                    <p class="text-luxury-gold text-sm">З нуля до профі</p>
                 </div>
             </div>
 
@@ -161,7 +161,7 @@
 <section class="py-24 bg-luxury-black relative">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-16 uppercase tracking-wider">
-            Результаты в <span class="text-luxury-gold">Цифрах</span>
+            Результати в <span class="text-luxury-gold">Цифрах</span>
         </h2>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -171,17 +171,17 @@
                 <div class="flex items-center gap-4 mb-6">
                     <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
                     <div>
-                        <h4 class="text-white font-bold">Елена В.</h4>
-                        <p class="text-luxury-muted text-xs">Ниша: Бьюти мастер</p>
+                        <h4 class="text-white font-bold">Олена В.</h4>
+                        <p class="text-luxury-muted text-xs">Ніша: Б'юті майстер</p>
                     </div>
                     <div class="ml-auto text-luxury-gold">★★★★★</div>
                 </div>
                 <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
-                    "Я думала, что SMM — это просто постить фоточки. София полностью перевернула мое мышление. После модуля по стратегии я подняла цены в салоне на 30% и запись полная!"
+                    "Я думала, що SMM — це просто постити фоточки. Софія повністю перевернула моє мислення. Після модуля зі стратегії я підняла ціни в салоні на 30% і запис тепер повний!"
                 </p>
                 <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
                     <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
-                    <p class="text-white font-bold">+1500 подписчиков за месяц</p>
+                    <p class="text-white font-bold">+1500 підписників за місяць</p>
                 </div>
             </div>
 
@@ -190,17 +190,17 @@
                 <div class="flex items-center gap-4 mb-6">
                     <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
                     <div>
-                        <h4 class="text-white font-bold">Виктория С.</h4>
-                        <p class="text-luxury-muted text-xs">Ниша: Студентка</p>
+                        <h4 class="text-white font-bold">Вікторія С.</h4>
+                        <p class="text-luxury-muted text-xs">Ніша: Студентка</p>
                     </div>
                     <div class="ml-auto text-luxury-gold">★★★★★</div>
                 </div>
                 <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
-                    "Курс окупился еще во время обучения. Нашла первого клиента на ведение за $300 уже на 3-й неделе. Материалы очень структурированы, без воды."
+                    "Курс окупився ще під час навчання. Знайшла першого клієнта на ведення за $300 уже на 3-му тижні. Матеріали дуже структуровані, без води."
                 </p>
                 <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
                     <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
-                    <p class="text-white font-bold">Первый клиент на $300</p>
+                    <p class="text-white font-bold">Перший клієнт на $300</p>
                 </div>
             </div>
 
@@ -210,16 +210,16 @@
                     <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-14 h-14 rounded-full border border-luxury-gold object-cover">
                     <div>
                         <h4 class="text-white font-bold">Максим Д.</h4>
-                        <p class="text-luxury-muted text-xs">Ниша: Таргетолог</p>
+                        <p class="text-luxury-muted text-xs">Ніша: Таргетолог</p>
                     </div>
                     <div class="ml-auto text-luxury-gold">★★★★★</div>
                 </div>
                 <p class="text-luxury-text text-sm leading-relaxed mb-6 italic">
-                    "Пришел подтянуть знания по контенту, а получил полноценную профессию контент-мейкера. Теперь продаю услуги комплексно: таргет + контент."
+                    "Прийшов підтягнути знання з контенту, а отримав повноцінну професію контент-мейкера. Тепер продаю послуги комплексно: таргет + контент."
                 </p>
                 <div class="bg-luxury-black p-4 border-l-2 border-luxury-gold">
                     <p class="text-luxury-gold text-xs font-bold uppercase mb-1">Результат:</p>
-                    <p class="text-white font-bold">Средний чек вырос в 2 раза</p>
+                    <p class="text-white font-bold">Середній чек зріс удвічі</p>
                 </div>
             </div>
 
@@ -231,7 +231,7 @@
 <section class="py-20 bg-luxury-card border-t border-white/5">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center text-white mb-16">
-            Реальные <span class="text-luxury-gold">Переписки</span>
+            Реальні <span class="text-luxury-gold">Переписки</span>
         </h2>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -240,16 +240,16 @@
                 <div class="flex items-end gap-3">
                     <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full">
                     <div class="dm-bubble p-4 max-w-[85%]">
-                        <p class="text-luxury-text text-sm">София, я в шоке! 😭 Вчера выложила Reels по твоей схеме, он набрал 10к просмотров за ночь!</p>
+                        <p class="text-luxury-text text-sm">Софія, я в шоці! 😭 Вчора виклала Reels за твоєю схемою, він набрав 10к переглядів за ніч!</p>
                     </div>
                 </div>
                 <div class="flex items-end gap-3">
                     <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full">
                     <div class="dm-bubble p-4 max-w-[85%]">
-                        <p class="text-luxury-text text-sm">Уже 3 заявки в директ упало на консультацию. Спасибо тебе огромное за этот модуль! ❤️</p>
+                        <p class="text-luxury-text text-sm">Уже 3 заявки в директ упало на консультацію. Дякую тобі величезне за цей модуль! ❤️</p>
                     </div>
                 </div>
-                <p class="text-xs text-luxury-muted ml-12 mt-1">Вчера, 10:42</p>
+                <p class="text-xs text-luxury-muted ml-12 mt-1">Вчора, 10:42</p>
             </div>
 
              <!-- Chat Item 2 -->
@@ -257,23 +257,23 @@
                 <div class="flex items-end gap-3">
                     <img src="https://randomuser.me/api/portraits/women/12.jpg" class="w-8 h-8 rounded-full">
                     <div class="dm-bubble p-4 max-w-[85%]">
-                        <p class="text-luxury-text text-sm">Отчитываюсь по домашке. Клиент согласовал стратегию с первого раза! Сказал, что такого уровня проработки еще не видел.</p>
+                        <p class="text-luxury-text text-sm">Звітую по домашці. Клієнт погодив стратегію з першого разу! Сказав, що такого рівня пропрацювання ще не бачив.</p>
                     </div>
                 </div>
                 <div class="flex items-end gap-3">
                     <img src="https://randomuser.me/api/portraits/women/12.jpg" class="w-8 h-8 rounded-full">
                     <div class="dm-bubble p-4 max-w-[85%]">
-                        <p class="text-luxury-text text-sm">Предоплату уже скинули на карту 💳</p>
+                        <p class="text-luxury-text text-sm">Передоплату вже скинули на картку 💳</p>
                     </div>
                 </div>
-                <p class="text-xs text-luxury-muted ml-12 mt-1">Сегодня, 14:15</p>
+                <p class="text-xs text-luxury-muted ml-12 mt-1">Сьогодні, 14:15</p>
             </div>
 
             <!-- Screenshot Image (Placeholder) -->
             <div class="hidden lg:block relative group cursor-pointer">
                 <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover rounded-xl opacity-60 group-hover:opacity-100 transition-opacity border border-white/10">
                 <div class="absolute inset-0 flex items-center justify-center">
-                    <span class="bg-black/70 text-white px-4 py-2 rounded-full text-sm backdrop-blur-md border border-white/20">Скриншоты оплат</span>
+                    <span class="bg-black/70 text-white px-4 py-2 rounded-full text-sm backdrop-blur-md border border-white/20">Скриншоти оплат</span>
                 </div>
             </div>
 
@@ -286,13 +286,13 @@
     <div class="absolute inset-0 bg-luxury-gold/5 pointer-events-none"></div>
     <div class="container mx-auto px-4 text-center relative z-10">
         <h2 class="text-3xl md:text-5xl font-bold font-montserrat text-white mb-6">
-            Стань следующим <span class="text-luxury-gold">Кейсом</span>
+            Стань наступним <span class="text-luxury-gold">Кейсом</span>
         </h2>
         <p class="text-luxury-muted text-lg mb-10 max-w-2xl mx-auto font-light">
-            Присоединяйся к потоку и начни зарабатывать на SMM уже через 4 недели.
+            Приєднуйся до потоку та почни заробляти на SMM уже через 4 тижні.
         </p>
         <a href="{% url 'main:index' %}#contact" class="inline-block px-12 py-5 bg-luxury-gold text-black hover:bg-white transition-all duration-300 uppercase tracking-widest text-sm font-bold shadow-[0_0_20px_rgba(197,157,95,0.3)]">
-            Записаться на курс
+            Записатися на курс
         </a>
     </div>
 </section>

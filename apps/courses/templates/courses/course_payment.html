@@ -8,11 +8,11 @@
     .price-glow {
         text-shadow: 0 0 30px rgba(197, 157, 95, 0.3);
     }
-    
+
     .feature-card {
         transition: all 0.3s ease;
     }
-    
+
     .feature-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 30px rgba(197, 157, 95, 0.2);
@@ -27,40 +27,40 @@
 
         <!-- Breadcrumbs -->
         <div class="mb-8 text-sm text-luxury-muted flex items-center gap-2">
-            <a href="{% url 'main:index' %}" class="hover:text-luxury-gold transition-colors">Главная</a>
+            <a href="{% url 'main:index' %}" class="hover:text-luxury-gold transition-colors">Головна</a>
             <span>/</span>
             <span class="text-luxury-gold">{{ course.title }}</span>
         </div>
 
         <div class="grid lg:grid-cols-5 gap-12">
 
-            <!-- LEFT: Информация о курсе -->
+            <!-- LEFT: Інформація про курс -->
             <div class="lg:col-span-3">
-                
+
                 <!-- Заголовок -->
                 <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                     {{ course.title }}
                 </h1>
-                
+
                 <p class="text-luxury-text text-lg leading-relaxed mb-8">
                     {{ course.description }}
                 </p>
 
-                <!-- Что включено -->
+                <!-- Що включено -->
                 <div class="bg-luxury-card border border-white/5 p-8 mb-8">
                     <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                         <span class="w-2 h-8 bg-luxury-gold"></span>
-                        Что включено
+                        Що включено
                     </h3>
-                    
+
                     <div class="space-y-4">
                         <div class="flex items-start gap-4">
                             <div class="w-8 h-8 rounded-full bg-luxury-gold/20 flex items-center justify-center shrink-0">
                                 <span class="text-luxury-gold">✓</span>
                             </div>
                             <div>
-                                <p class="text-white font-medium">{{ course.lessons_count }} видео-уроков</p>
-                                <p class="text-luxury-muted text-sm">Пошаговая система обучения</p>
+                                <p class="text-white font-medium">{{ course.lessons_count }} відео-уроків</p>
+                                <p class="text-luxury-muted text-sm">Покрокова система навчання</p>
                             </div>
                         </div>
 
@@ -69,8 +69,8 @@
                                 <span class="text-luxury-gold">✓</span>
                             </div>
                             <div>
-                                <p class="text-white font-medium">Практические задания</p>
-                                <p class="text-luxury-muted text-sm">С проверкой от преподавателя</p>
+                                <p class="text-white font-medium">Практичні завдання</p>
+                                <p class="text-luxury-muted text-sm">З перевіркою від викладача</p>
                             </div>
                         </div>
 
@@ -79,8 +79,8 @@
                                 <span class="text-luxury-gold">✓</span>
                             </div>
                             <div>
-                                <p class="text-white font-medium">Шаблоны и материалы</p>
-                                <p class="text-luxury-muted text-sm">Готовые инструменты для работы</p>
+                                <p class="text-white font-medium">Шаблони та матеріали</p>
+                                <p class="text-luxury-muted text-sm">Готові інструменти для роботи</p>
                             </div>
                         </div>
 
@@ -89,8 +89,8 @@
                                 <span class="text-luxury-gold">✓</span>
                             </div>
                             <div>
-                                <p class="text-white font-medium">Пожизненный доступ</p>
-                                <p class="text-luxury-muted text-sm">Учитесь в своем темпе</p>
+                                <p class="text-white font-medium">Довічний доступ</p>
+                                <p class="text-luxury-muted text-sm">Навчайтеся у власному темпі</p>
                             </div>
                         </div>
 
@@ -99,82 +99,82 @@
                                 <span class="text-luxury-gold">✓</span>
                             </div>
                             <div>
-                                <p class="text-white font-medium">Сертификат</p>
-                                <p class="text-luxury-muted text-sm">После прохождения курса</p>
+                                <p class="text-white font-medium">Сертифікат</p>
+                                <p class="text-luxury-muted text-sm">Після проходження курсу</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Для кого этот курс -->
+                <!-- Для кого цей курс -->
                 <div class="mb-8">
-                    <h3 class="text-2xl font-bold text-white mb-6">Для кого этот курс</h3>
+                    <h3 class="text-2xl font-bold text-white mb-6">Для кого цей курс</h3>
                     <div class="grid md:grid-cols-2 gap-4">
                         <div class="feature-card bg-luxury-card border border-white/5 p-6">
-                            <p class="text-white font-medium mb-2">Новички в SMM</p>
-                            <p class="text-luxury-muted text-sm">Начните карьеру с нуля</p>
+                            <p class="text-white font-medium mb-2">Новачки в SMM</p>
+                            <p class="text-luxury-muted text-sm">Почніть кар'єру з нуля</p>
                         </div>
                         <div class="feature-card bg-luxury-card border border-white/5 p-6">
-                            <p class="text-white font-medium mb-2">Фрилансеры</p>
-                            <p class="text-luxury-muted text-sm">Расширьте навыки</p>
+                            <p class="text-white font-medium mb-2">Фрілансери</p>
+                            <p class="text-luxury-muted text-sm">Розширте свої навички</p>
                         </div>
                         <div class="feature-card bg-luxury-card border border-white/5 p-6">
-                            <p class="text-white font-medium mb-2">Предприниматели</p>
-                            <p class="text-luxury-muted text-sm">Продвигайте свой бизнес</p>
+                            <p class="text-white font-medium mb-2">Підприємці</p>
+                            <p class="text-luxury-muted text-sm">Просувайте свій бізнес</p>
                         </div>
                         <div class="feature-card bg-luxury-card border border-white/5 p-6">
                             <p class="text-white font-medium mb-2">Маркетологи</p>
-                            <p class="text-luxury-muted text-sm">Освойте новые инструменты</p>
+                            <p class="text-luxury-muted text-sm">Опануйте нові інструменти</p>
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <!-- RIGHT: Карточка оплаты -->
+            <!-- RIGHT: Картка оплати -->
             <div class="lg:col-span-2">
                 <div class="sticky top-24">
                     <div class="bg-luxury-card border-2 border-luxury-gold/30 p-8 shadow-2xl">
-                        
-                        <!-- Цена -->
+
+                        <!-- Ціна -->
                         <div class="text-center mb-8 pb-8 border-b border-white/10">
-                            <p class="text-luxury-muted text-sm uppercase tracking-widest mb-2">Стоимость курса</p>
+                            <p class="text-luxury-muted text-sm uppercase tracking-widest mb-2">Вартість курсу</p>
                             <div class="price-glow text-5xl font-bold text-luxury-gold mb-2">
                                 {{ course.price|floatformat:0 }} {{ course.currency }}
                             </div>
-                            <p class="text-luxury-muted text-sm">Единоразовый платеж</p>
+                            <p class="text-luxury-muted text-sm">Одноразовий платіж</p>
                         </div>
 
-                        <!-- Форма оплаты -->
+                        <!-- Форма оплати -->
                         <form method="post" action="{% url 'courses:initiate_payment' course.slug %}">
                             {% csrf_token %}
-                            
+
                             <button type="submit" class="w-full bg-luxury-gold hover:bg-white text-black font-bold py-4 px-8 uppercase tracking-widest text-sm transition-all duration-300 mb-6 shadow-[0_0_30px_rgba(197,157,95,0.3)] hover:shadow-[0_0_40px_rgba(197,157,95,0.5)]">
-                                Оплатить курс
+                                Оплатити курс
                             </button>
                         </form>
 
-                        <!-- Гарантии -->
+                        <!-- Гарантії -->
                         <div class="space-y-3 text-sm text-luxury-muted">
                             <div class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-luxury-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                                <span>Безопасная оплата через LiqPay</span>
+                                <span>Безпечна оплата через LiqPay</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-luxury-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>Мгновенный доступ после оплаты</span>
+                                <span>Митттєвий доступ після оплати</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-luxury-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>Гарантия возврата 14 дней</span>
+                                <span>Гарантія повернення 14 днів</span>
                             </div>
                         </div>
 
-                        <!-- Контакты -->
+                        <!-- Контакти -->
                         <div class="mt-8 pt-8 border-t border-white/10 text-center">
-                            <p class="text-luxury-muted text-sm mb-4">Есть вопросы?</p>
+                            <p class="text-luxury-muted text-sm mb-4">Маєте запитання?</p>
                             <a href="{% url 'main:index' %}#contact" class="text-luxury-gold hover:text-white transition-colors text-sm font-medium">
-                                Свяжитесь со мной →
+                                Зв'яжіться зі мною →
                             </a>
                         </div>
 

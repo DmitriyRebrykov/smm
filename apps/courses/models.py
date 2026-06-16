@@ -130,15 +130,37 @@ class Purchase(models.Model):
         self.save()
 
         # expires_at намеренно НЕ передаём — None = вечный доступ
-        CourseAccess.objects.update_or_create(
-            user=self.user,
-            course=self.course,
-            defaults={
-                'is_active': True,
-                'expires_at': None,   # явно сбрасываем — на случай если запись уже существовала с датой
-                'purchase': self,
-            }
-        )
+        def mark_as_paid(self):
+            """Отмечает покупку как оплаченную и выдаёт вечный доступ к курсу."""
+            import logging
+            logger = logging.getLogger(__name__)
+
+            if self.status == 'success':
+                return
+
+            self.status = 'success'
+            self.paid_at = timezone.now()
+            self.save()
+
+            # 🔑 КЛЮЧЕВОЙ ШАГ: выдаём доступ
+            access, created = CourseAccess.objects.update_or_create(
+                user=self.user,
+                course=self.course,
+                defaults={
+                    'is_active': True,
+                    'expires_at': None,  # ← ВЕЧНЫЙ доступ
+                    'purchase': self,
+                    'granted_at': timezone.now(),
+                }
+            )
+
+            logger.info(f"✅ Доступ выдан: {self.user.email} → {self.course.title}")
+
+            try:
+                from apps.courses.services.email_service import send_purchase_confirmation
+                send_purchase_confirmation(self)
+            except Exception as e:
+                logger.error(f"Email ошибка: {e}")
 
         # Отправляем email — в отдельном try/except, чтобы не сломать логику оплаты
         try:

@@ -1,11 +1,11 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %}Профиль | {{ user.get_full_name }}{% endblock %}
+{% block title %}Профіль | {{ user.get_full_name }}{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Стили для инпутов: прозрачный фон, только нижняя граница */
+    /* Стилі для інпутів: прозорий фон, тільки нижня межа */
     .profile-input {
         background-color: transparent;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -18,15 +18,15 @@
         outline: none;
         box-shadow: 0 4px 6px -6px rgba(197, 157, 95, 0.3);
     }
-    
-    /* Стили для Select (выбор уровня) */
+
+    /* Стилі для Select (вибір рівня) */
     select.profile-input option {
         background-color: #181614;
         color: #fff;
         padding: 10px;
     }
 
-    /* Кастомный чекбокс */
+    /* Кастомний чекбокс */
     .custom-checkbox {
         appearance: none;
         background-color: transparent;
@@ -57,44 +57,37 @@
 {% block content %}
 
 <section class="relative min-h-screen pt-32 pb-20 bg-[#12100E]">
-    
-    <!-- Декоративное фоновое свечение -->
+
     <div class="absolute top-40 left-0 w-[500px] h-[500px] bg-luxury-gold/5 rounded-full blur-[120px] pointer-events-none -translate-x-1/2"></div>
     <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-luxury-gold/5 rounded-full blur-[100px] pointer-events-none translate-x-1/2"></div>
 
     <div class="container mx-auto px-4 relative z-10">
-        
-        <!-- Заголовок -->
+
         <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-4">
             <div>
                 <h1 class="text-3xl md:text-5xl font-bold font-montserrat text-white uppercase tracking-wider">
-                    Мой <span class="text-luxury-gold">Профиль</span>
+                    Мій <span class="text-luxury-gold">Профіль</span>
                 </h1>
                 <p class="text-luxury-muted text-sm mt-2 font-light">
-                    Управление личными данными и настройками обучения
+                    Керування особистими даними та налаштуваннями навчання
                 </p>
             </div>
-            <!-- Статус аккаунта (декоративный) -->
             <div class="text-right hidden md:block">
                 <span class="text-xs text-luxury-muted uppercase tracking-widest block mb-1">Статус</span>
                 <span class="text-luxury-gold border border-luxury-gold px-3 py-1 text-xs font-bold uppercase tracking-widest">
-                    {{ user.profile.get_experience_level_display|default:"Новичок" }}
+                    {{ user.profile.get_experience_level_display|default:"Новачок" }}
                 </span>
             </div>
         </div>
 
-        <!-- Основная форма -->
         <form method="post" enctype="multipart/form-data" class="grid lg:grid-cols-12 gap-8 items-start">
             {% csrf_token %}
 
-            <!-- ЛЕВАЯ КОЛОНКА: Аватар и быстрые действия -->
             <div class="lg:col-span-4 space-y-6">
-                
-                <!-- Карточка аватара -->
-                <div class="bg-luxury-card border border-white/5 p-8 text-center relative overflow-hidden group hover:border-luxury-gold/30 transition-colors duration-500">
-                    <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-luxury-gold to-transparent opacity-50"></div>
 
-                    <!-- Avatar Image -->
+                <div class="bg-luxury-card border border-white/5 p-8 text-center relative overflow-hidden group hover:border-luxury-gold/30 transition-colors duration-500">
+                    <div class="absolute top-0 left-0 w-[full] h-[2px] bg-gradient-to-r from-transparent via-luxury-gold to-transparent opacity-50"></div>
+
                     <div class="relative w-32 h-32 mx-auto mb-6 group-avatar">
                         <div class="w-full h-full rounded-full border-2 border-luxury-gold p-1 overflow-hidden">
                             {% if user.avatar %}
@@ -103,10 +96,9 @@
                                 <img id="avatar-preview" src="https://ui-avatars.com/api/?name={{ user.get_initials }}&background=181614&color=C59D5F&font-size=0.5" alt="Avatar" class="w-full h-full rounded-full object-cover">
                             {% endif %}
                         </div>
-                        
-                        <!-- Кнопка загрузки (скрытый инпут) -->
+
                         <label for="id_avatar" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-white text-xs font-bold uppercase tracking-widest">
-                            Изменить
+                            Змінити
                         </label>
                         <input type="file" name="avatar" id="id_avatar" class="hidden" accept="image/*" onchange="previewImage(this)">
                     </div>
@@ -114,7 +106,6 @@
                     <h2 class="text-xl font-bold text-white mb-1">{{ user.get_full_name|default:user.username }}</h2>
                     <p class="text-luxury-muted text-xs mb-6">{{ user.email }}</p>
 
-                    <!-- Социальные иконки (если заполнены) -->
                     <div class="flex justify-center gap-4 mb-6">
                         {% if user.profile.instagram %}
                         <a href="https://instagram.com/{{ user.profile.instagram }}" target="_blank" class="text-luxury-muted hover:text-luxury-gold transition-colors">
@@ -129,117 +120,101 @@
                     </div>
                 </div>
 
-                <!-- Мета-инфо -->
                 <div class="bg-luxury-card border border-white/5 p-6">
                     <div class="flex justify-between items-center text-sm mb-3">
-                        <span class="text-luxury-muted">Регистрация:</span>
+                        <span class="text-luxury-muted">Реєстрація:</span>
                         <span class="text-white">{{ user.created_at|date:"d.m.Y" }}</span>
                     </div>
                     <div class="flex justify-between items-center text-sm">
-                        <span class="text-luxury-muted">Последний вход:</span>
+                        <span class="text-luxury-muted">Останній вхід:</span>
                         <span class="text-white">{{ user.last_login|date:"d.m.Y H:i" }}</span>
                     </div>
                 </div>
-                
-                <!-- Кнопка Выхода -->
+
                 <a href="{% url 'users:logout' %}" class="w-full py-4 border border-white/10 text-luxury-muted hover:text-white hover:border-white hover:bg-white/5 transition-all text-sm uppercase tracking-widest flex items-center justify-center gap-2">
-                    Выйти из аккаунта
+                    Вийти з акаунти
                 </a>
             </div>
 
-            <!-- ПРАВАЯ КОЛОНКА: Редактирование данных -->
             <div class="lg:col-span-8 space-y-8">
-                
-                <!-- 1. Личная информация -->
+
                 <div class="bg-luxury-card border border-white/5 p-8 relative">
                     <h3 class="text-xl font-bold text-white mb-8 flex items-center gap-3 border-b border-white/5 pb-4">
                         <span class="w-1 h-6 bg-luxury-gold block"></span>
-                        Личная информация
+                        Особиста інформація
                     </h3>
 
                     <div class="grid md:grid-cols-2 gap-8 mb-6">
-                        <!-- Имя -->
                         <div class="space-y-2">
-                            <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Имя</label>
-                            <input type="text" name="first_name" value="{{ user.first_name }}" class="profile-input w-full px-2 py-3" placeholder="Ваше имя">
+                            <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Ім'я</label>
+                            <input type="text" name="first_name" value="{{ user.first_name }}" class="profile-input w-full px-2 py-3" placeholder="Ваше ім'я">
                         </div>
-                        
-                        <!-- Фамилия -->
+
                         <div class="space-y-2">
-                            <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Фамилия</label>
-                            <input type="text" name="last_name" value="{{ user.last_name }}" class="profile-input w-full px-2 py-3" placeholder="Ваша фамилия">
+                            <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Прізвище</label>
+                            <input type="text" name="last_name" value="{{ user.last_name }}" class="profile-input w-full px-2 py-3" placeholder="Ваше прізвище">
                         </div>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-8 mb-6">
-                        <!-- Email (Read only рекомендуется) -->
                         <div class="space-y-2">
-                            <label class="text-[10px] text-luxury-muted uppercase tracking-widest font-bold">Email (Логин)</label>
-                            <input type="email" value="{{ user.email }}" class="profile-input w-full px-2 py-3 opacity-50 cursor-not-allowed" readonly title="Email изменить нельзя">
+                            <label class="text-[10px] text-luxury-muted uppercase tracking-widest font-bold">Email (Логін)</label>
+                            <input type="email" value="{{ user.email }}" class="profile-input w-full px-2 py-3 opacity-50 cursor-not-allowed" readonly title="Email змінити не можна">
                         </div>
-                        
-                        <!-- Телефон -->
+
                         <div class="space-y-2">
                             <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Телефон</label>
                             <input type="tel" name="phone" value="{{ user.phone }}" class="profile-input w-full px-2 py-3" placeholder="+38 (000) 000-00-00">
                         </div>
                     </div>
 
-                    <!-- О себе -->
                     <div class="space-y-2">
-                        <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">О себе / Биография</label>
-                        <textarea name="bio" rows="3" class="profile-input w-full px-2 py-3 resize-none" placeholder="Расскажите немного о себе...">{{ user.bio }}</textarea>
+                        <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Про себе / Біографія</label>
+                        <textarea name="bio" rows="3" class="profile-input w-full px-2 py-3 resize-none" placeholder="Розкажіть трохи про себе...">{{ user.bio }}</textarea>
                     </div>
                 </div>
 
-                <!-- 2. Профессиональная информация (UserProfile) -->
                 <div class="bg-luxury-card border border-white/5 p-8 relative">
                     <h3 class="text-xl font-bold text-white mb-8 flex items-center gap-3 border-b border-white/5 pb-4">
                         <span class="w-1 h-6 bg-luxury-gold block"></span>
-                        Профиль и Цели
+                        Профіль та Цілі
                     </h3>
 
                     <div class="grid md:grid-cols-2 gap-8 mb-6">
-                        <!-- Род деятельности -->
                         <div class="space-y-2">
-                            <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Род деятельности</label>
-                            <input type="text" name="occupation" value="{{ user.profile.occupation }}" class="profile-input w-full px-2 py-3" placeholder="Например: SMM менеджер">
+                            <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Рід діяльності</label>
+                            <input type="text" name="occupation" value="{{ user.profile.occupation }}" class="profile-input w-full px-2 py-3" placeholder="Наприклад: SMM менеджер">
                         </div>
-                        
-                        <!-- Уровень опыта (Select) -->
+
                         <div class="space-y-2">
-                            <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Уровень опыта</label>
+                            <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Рівень досвіду</label>
                             <select name="experience_level" class="profile-input w-full px-2 py-3 cursor-pointer">
-                                <option value="beginner" {% if user.profile.experience_level == 'beginner' %}selected{% endif %}>Новичок</option>
-                                <option value="intermediate" {% if user.profile.experience_level == 'intermediate' %}selected{% endif %}>Средний</option>
-                                <option value="advanced" {% if user.profile.experience_level == 'advanced' %}selected{% endif %}>Продвинутый</option>
-                                <option value="expert" {% if user.profile.experience_level == 'expert' %}selected{% endif %}>Эксперт</option>
+                                <option value="beginner" {% if user.profile.experience_level == 'beginner' %}selected{% endif %}>Новачок</option>
+                                <option value="intermediate" {% if user.profile.experience_level == 'intermediate' %}selected{% endif %}>Середній</option>
+                                <option value="advanced" {% if user.profile.experience_level == 'advanced' %}selected{% endif %}>Просунутий</option>
+                                <option value="expert" {% if user.profile.experience_level == 'expert' %}selected{% endif %}>Експерт</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-8 mb-6">
-                        <!-- Компания -->
                         <div class="space-y-2">
-                            <label class="text-[10px] text-luxury-muted uppercase tracking-widest font-bold">Компания</label>
-                            <input type="text" name="company" value="{{ user.profile.company }}" class="profile-input w-full px-2 py-3" placeholder="Название компании">
+                            <label class="text-[10px] text-luxury-muted uppercase tracking-widest font-bold">Компанія</label>
+                            <input type="text" name="company" value="{{ user.profile.company }}" class="profile-input w-full px-2 py-3" placeholder="Назва компанії">
                         </div>
-                         <!-- Сайт -->
                          <div class="space-y-2">
-                            <label class="text-[10px] text-luxury-muted uppercase tracking-widest font-bold">Веб-сайт</label>
+                            <label class="text-[10px] text-luxury-muted uppercase tracking-widest font-bold">Вебсайт</label>
                             <input type="url" name="website" value="{{ user.profile.website }}" class="profile-input w-full px-2 py-3" placeholder="https://">
                         </div>
                     </div>
-                    
-                    <!-- Цель обучения -->
+
                     <div class="space-y-2 mb-6">
-                        <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Цель обучения</label>
-                        <textarea name="learning_goal" rows="2" class="profile-input w-full px-2 py-3 resize-none" placeholder="Чему вы хотите научиться?">{{ user.profile.learning_goal }}</textarea>
+                        <label class="text-[10px] text-luxury-gold uppercase tracking-widest font-bold">Мета навчання</label>
+                        <textarea name="learning_goal" rows="2" class="profile-input w-full px-2 py-3 resize-none" placeholder="Чого ви хочете навчитися?">{{ user.profile.learning_goal }}</textarea>
                     </div>
 
-                    <!-- Социальные сети -->
                     <div class="space-y-4 pt-4 border-t border-white/5">
-                        <label class="text-[10px] text-luxury-muted uppercase tracking-widest font-bold mb-2 block">Социальные сети (Username без @)</label>
+                        <label class="text-[10px] text-luxury-muted uppercase tracking-widest font-bold mb-2 block">Соціальні мережі (Username без @)</label>
                         <div class="grid md:grid-cols-3 gap-4">
                             <input type="text" name="instagram" value="{{ user.profile.instagram }}" class="profile-input px-2 py-2 text-sm" placeholder="Instagram">
                             <input type="text" name="telegram" value="{{ user.profile.telegram }}" class="profile-input px-2 py-2 text-sm" placeholder="Telegram">
@@ -248,18 +223,15 @@
                     </div>
                 </div>
 
-                <!-- 3. Настройки и Сохранение -->
                 <div class="bg-luxury-card border border-white/5 p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-                    
-                    <!-- Чекбокс уведомлений -->
+
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" name="email_notifications" class="custom-checkbox" {% if user.email_notifications %}checked{% endif %}>
-                        <span class="text-sm text-luxury-text group-hover:text-white transition-colors">Получать email уведомления</span>
+                        <span class="text-sm text-luxury-text group-hover:text-white transition-colors">Отримувати email-сповіщення</span>
                     </label>
 
-                    <!-- Кнопка Сохранить -->
                     <button type="submit" class="px-12 py-4 bg-luxury-gold hover:bg-white text-black font-bold uppercase tracking-widest text-sm transition-all duration-300 shadow-[0_0_20px_rgba(197,157,95,0.2)] hover:shadow-[0_0_30px_rgba(197,157,95,0.4)]">
-                        Сохранить изменения
+                        Зберегти зміни
                     </button>
                 </div>
 
@@ -272,7 +244,7 @@
 
 {% block extra_js %}
 <script>
-    // Предпросмотр аватара при загрузке
+    // Попередній перегляд аватара при завантаженні
     function previewImage(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();

@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %}Каталог курсов | Sofia SMM{% endblock %}
+{% block title %}Каталог курсів | Sofia SMM{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -14,7 +14,7 @@
         border-color: rgba(197, 157, 95, 0.4);
         box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
     }
-    
+
     /* Эффект для изображения */
     .course-image-wrapper::after {
         content: '';
@@ -46,13 +46,13 @@
 <section class="relative pt-32 pb-20 bg-[#12100E] overflow-hidden">
     <!-- Фоновое свечение -->
     <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-luxury-gold/5 rounded-full blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
-    
+
     <div class="container mx-auto px-4 relative z-10 text-center">
         <h1 class="text-4xl md:text-6xl font-bold font-montserrat text-white mb-6 uppercase tracking-wider">
-            Каталог <span class="text-luxury-gold">Программ</span>
+            Каталог <span class="text-luxury-gold">Програм</span>
         </h1>
         <p class="text-luxury-muted text-lg max-w-2xl mx-auto font-light">
-            Выберите свой путь в SMM. От новичка до востребованного эксперта с высоким чеком.
+            Оберіть свій шлях у SMM. Від новечка до затребуваного експерта з високим чеком.
         </p>
     </div>
 </section>
@@ -60,7 +60,7 @@
 <!-- Catalog Grid -->
 <section class="pb-24 bg-[#12100E]">
     <div class="container mx-auto px-4">
-        
+
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for course in courses %}
                 <!-- Определяем, куплен ли курс -->
@@ -70,7 +70,7 @@
                         <!-- Бейдж статуса -->
                         <div class="absolute top-4 left-4 z-20 badge-purchased px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-sm flex items-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Доступ открыт
+                            Доступ відкрито
                         </div>
 
                         <!-- Изображение -->
@@ -87,11 +87,11 @@
                         <!-- Контент -->
                         <div class="p-8 flex flex-col flex-grow relative">
                             <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-luxury-gold transition-colors font-montserrat">{{ course.title }}</h3>
-                            
+
                             <!-- Мета инфо -->
                             <div class="flex items-center gap-4 text-xs text-luxury-muted mb-4 uppercase tracking-wider">
                                 <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> {{ course.duration }}</span>
-                                <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg> {{ course.lessons_count }} уроков</span>
+                                <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg> {{ course.lessons_count }} уроків</span>
                             </div>
 
                             <p class="text-luxury-muted text-sm mb-8 line-clamp-2 leading-relaxed">
@@ -100,7 +100,7 @@
 
                             <div class="mt-auto">
                                 <a href="" class="w-full block text-center py-4 border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black transition-all uppercase tracking-widest text-xs font-bold">
-                                    Перейти к обучению
+                                    Перейти до навчання
                                 </a>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                 {% else %}
                     <!-- КАРТОЧКА ДЛЯ ПОКУПКИ -->
                     <div class="course-card bg-[#181614] border border-white/5 rounded-none flex flex-col h-full group relative overflow-hidden">
-                        
+
                         <!-- Изображение -->
                         <div class="course-image-wrapper relative h-64 overflow-hidden">
                             {% if course.preview_image %}
@@ -119,7 +119,7 @@
                                     <span class="text-white/10 text-4xl font-bold">SMM</span>
                                 </div>
                             {% endif %}
-                            
+
                             <!-- Цена на картинке -->
                             <div class="absolute bottom-4 left-4 z-20">
                                 <div class="text-white font-bold text-2xl drop-shadow-lg font-montserrat">
@@ -131,10 +131,10 @@
                         <!-- Контент -->
                         <div class="p-8 flex flex-col flex-grow relative">
                             <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-luxury-gold transition-colors font-montserrat">{{ course.title }}</h3>
-                            
+
                             <div class="flex items-center gap-4 text-xs text-luxury-muted mb-4 uppercase tracking-wider">
                                 <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> {{ course.duration }}</span>
-                                <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg> {{ course.lessons_count }} уроков</span>
+                                <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg> {{ course.lessons_count }} уроків</span>
                             </div>
 
                             <p class="text-luxury-muted text-sm mb-8 line-clamp-3 leading-relaxed">
@@ -144,11 +144,11 @@
                             <div class="mt-auto grid grid-cols-2 gap-4">
                                 <!-- Подробнее -->
                                 <a href="#" class="py-3 text-center border-b border-white/20 text-white hover:border-luxury-gold hover:text-luxury-gold transition-all uppercase tracking-widest text-[10px] font-bold">
-                                    Подробнее
+                                    Детальніше
                                 </a>
                                 <!-- Купить -->
                                 <a href="{%url 'courses:course_detail' course.slug%}" class="py-3 text-center bg-white text-black hover:bg-luxury-gold transition-all uppercase tracking-widest text-[10px] font-bold">
-                                    Купить курс
+                                    Купити курс
                                 </a>
                             </div>
                         </div>
@@ -165,13 +165,13 @@
     <div class="absolute inset-0 bg-luxury-gold/5 pointer-events-none"></div>
     <div class="container mx-auto px-4 text-center relative z-10">
         <h2 class="text-2xl md:text-4xl font-bold font-montserrat text-white mb-4">
-            Не знаете, что выбрать?
+            Не знаєте, що обрати?
         </h2>
         <p class="text-luxury-muted text-sm mb-8 max-w-xl mx-auto">
-            Оставьте заявку на консультацию, и я помогу подобрать программу под ваши цели и уровень подготовки.
+            Залиште заявку на консультацію, і я допоможу підібрати програму під ваші цілі та рівень підготовки.
         </p>
         <a href="{% url 'main:index' %}#contact" class="inline-block px-10 py-3 border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-black transition-all duration-300 uppercase tracking-widest text-xs font-bold">
-            Получить консультацию
+            Отримати консультацію
         </a>
     </div>
 </section>

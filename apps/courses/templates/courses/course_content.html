@@ -5,7 +5,7 @@
 
 {% block extra_css %}
 <style>
-    /* Кастомный скроллбар для списка уроков */
+    /* Кастомний скролбар для списку уроків */
     .lesson-list-scroll::-webkit-scrollbar {
         width: 4px;
     }
@@ -20,19 +20,19 @@
         background: #C59D5F;
     }
 
-    /* Активный урок в списке */
+    /* Активний урок у списку */
     .lesson-item.active {
         background: linear-gradient(90deg, rgba(197, 157, 95, 0.1) 0%, transparent 100%);
         border-left: 3px solid #C59D5F;
     }
 
-    /* Эффект свечения для видео */
+    /* Ефект світіння для відео */
     .video-container-glow {
         box-shadow: 0 0 40px rgba(197, 157, 95, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* Стили контента (чтобы текст урока выглядел красиво) */
+    /* Стилі контенту (щоб текст уроку виглядав красиво) */
     .lesson-content h2 { color: #fff; font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: bold; }
     .lesson-content h3 { color: #fff; font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: bold; }
     .lesson-content p { color: #9CA3AF; margin-bottom: 1rem; line-height: 1.7; }
@@ -46,30 +46,30 @@
 
 <div class="min-h-screen bg-[#12100E] pt-24 pb-20 relative">
 
-    <!-- Фоновый декоративный элемент (едва заметный) -->
+    <!-- Фоновий декоративний елемент (ледь помітний) -->
     <div class="absolute top-20 left-1/2 w-[800px] h-[800px] bg-luxury-gold/5 rounded-full blur-[150px] pointer-events-none -translate-x-1/2 z-0"></div>
 
     <div class="container mx-auto px-4 relative z-10">
 
-        <!-- Хлебные крошки -->
+        <!-- Хлібні крихти -->
         <div class="mb-6 text-xs md:text-sm text-luxury-muted flex flex-wrap items-center gap-2">
-            <a href="{% url 'main:index' %}" class="hover:text-luxury-gold transition-colors">Главная</a>
+            <a href="{% url 'main:index' %}" class="hover:text-luxury-gold transition-colors">Головна</a>
             <span>/</span>
-            <a href="{% url 'courses:my_courses' %}" class="hover:text-luxury-gold transition-colors">Мое обучение</a>
+            <a href="{% url 'courses:my_courses' %}" class="hover:text-luxury-gold transition-colors">Моє навчання</a>
             <span>/</span>
             <span class="text-white">{{ course.title }}</span>
         </div>
 
         <div class="grid lg:grid-cols-12 gap-8 items-start">
 
-            <!-- SIDEBAR: Список уроков (Left Side on Desktop) -->
+            <!-- SIDEBAR: Список уроків (Left Side on Desktop) -->
             <div class="lg:col-span-4 lg:order-1 order-2">
                 <div class="bg-luxury-card border border-white/5 overflow-hidden sticky top-24 shadow-2xl">
                     <!-- Header Sidebar -->
                     <div class="p-5 border-b border-white/5 bg-[#181614]">
                         <h3 class="text-lg font-bold text-white mb-1 font-montserrat">{{ course.title }}</h3>
                         <p class="text-xs text-luxury-muted uppercase tracking-widest mt-1">
-                            {{ course.lessons_count }} Уроков
+                            {{ course.lessons_count }} Уроків
                         </p>
                     </div>
 
@@ -77,20 +77,20 @@
                     <div class="lesson-list-scroll max-h-[600px] overflow-y-auto p-2 space-y-1">
                         {% for lesson in lessons %}
                             <!--
-                                Проверка: является ли этот урок текущим.
-                                Ссылку формируем динамически (нужен name='lesson_detail' в urls.py)
+                                Перевірка: чи є цей урок поточним.
+                                Посилання формуємо динамічно (потрібен name='lesson_detail' в urls.py)
                             -->
                             <a href="{% url 'courses:lesson_detail' course.slug lesson.slug %}"
                                class="lesson-item flex items-center gap-3 p-4 hover:bg-white/5 transition-all duration-300 rounded-r-sm group
                                {% if lesson.id == current_lesson.id %}active{% else %}border-l-3 border-transparent{% endif %}">
 
-                                <!-- Иконка статуса -->
+                                <!-- Іконка статусу -->
                                 <div class="shrink-0">
                                     {% if lesson.id == current_lesson.id %}
-                                        <!-- Иконка Play для текущего -->
+                                        <!-- Іконка Play для поточного -->
                                         <div class="w-6 h-6 rounded-full border border-luxury-gold flex items-center justify-center text-[8px] text-luxury-gold">▶</div>
                                     {% else %}
-                                        <!-- Иконка списка для остальных -->
+                                        <!-- Іконка списку для інших -->
                                         <div class="w-6 h-6 rounded-full bg-white/5 text-luxury-muted flex items-center justify-center text-[10px] group-hover:bg-luxury-gold group-hover:text-black transition-colors">{{ lesson.order }}</div>
                                     {% endif %}
                                 </div>
@@ -113,22 +113,22 @@
                                 </div>
                             </a>
                         {% empty %}
-                            <div class="p-4 text-center text-luxury-muted text-sm">Уроки еще не добавлены</div>
+                            <div class="p-4 text-center text-luxury-muted text-sm">Уроки ще не додано</div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
 
-            <!-- MAIN CONTENT: Плеер и Материалы (Right Side) -->
+            <!-- MAIN CONTENT: Плеєр та Матеріали (Right Side) -->
             <div class="lg:col-span-8 lg:order-2 order-1">
 
                 <!-- Video Player -->
                 {% if current_lesson.video_url %}
                 <div class="relative w-full aspect-video bg-black video-container-glow group overflow-hidden mb-8 rounded-sm">
                     <!--
-                         ВАЖНО: Если video_url это ссылка на YouTube (watch?v=...),
-                         ее нужно преобразовать в embed/ во вьюхе или через фильтр.
-                         Здесь предполагаем, что в базе лежит прямая ссылка или embed-ссылка.
+                         ВАЖЛИВО: Якщо video_url це посилання на YouTube (watch?v=...),
+                         його потрібно перетворити в embed/ у view або через фільтр.
+                         Тут припускаємо, що в базі лежить пряме посилання або embed-посилання.
                     -->
                     <iframe class="w-full h-full"
                             src="{{ current_lesson.video_url }}"
@@ -151,35 +151,35 @@
                         </h1>
                     </div>
 
-                    <!-- Кнопки навигации (Desktop) -->
+                    <!-- Кнопки навігації (Desktop) -->
                     <div class="hidden md:flex items-center gap-3">
                         {% if previous_lesson %}
-                            <a href="{% url 'lesson_detail' course.slug previous_lesson.slug %}" class="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center text-luxury-muted hover:text-white hover:border-luxury-gold transition-colors" title="Предыдущий урок">
+                            <a href="{% url 'lesson_detail' course.slug previous_lesson.slug %}" class="w-10 h-10 border border-white/10 rounded-full flex items-center justify-center text-luxury-muted hover:text-white hover:border-luxury-gold transition-colors" title="Попередній урок">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </a>
                         {% endif %}
 
                         {% if next_lesson %}
                             <a href="{% url 'courses:lesson_detail' course.slug next_lesson.slug %}" class="flex items-center gap-2 border border-luxury-gold bg-luxury-gold text-black px-6 py-2.5 rounded-full hover:bg-white transition-all text-sm font-bold uppercase tracking-wide">
-                                <span>Далее</span>
+                                <span>Далі</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </a>
                         {% else %}
-                             <span class="px-6 py-2.5 border border-white/10 rounded-full text-luxury-muted text-sm">Курс завершен 🎉</span>
+                             <span class="px-6 py-2.5 border border-white/10 rounded-full text-luxury-muted text-sm">Курс завершено 🎉</span>
                         {% endif %}
                     </div>
                 </div>
 
-                <!-- Tabs (Описание / Файлы) -->
+                <!-- Tabs (Опис / Файли) -->
                 <div class="mb-8">
                     <!-- Tab Headers -->
                     <div class="flex gap-8 border-b border-white/5 mb-6">
                         <button class="tab-btn active pb-3 text-sm font-bold uppercase tracking-widest text-white border-b-2 border-luxury-gold transition-colors" onclick="switchTab(event, 'description')">
-                            Описание
+                            Опис
                         </button>
                         {% if current_lesson.files %}
                         <button class="tab-btn pb-3 text-sm font-bold uppercase tracking-widest text-luxury-muted hover:text-white border-b-2 border-transparent transition-colors" onclick="switchTab(event, 'files')">
-                            Файлы ({{ current_lesson.files|length }})
+                            Файли ({{ current_lesson.files|length }})
                         </button>
                         {% endif %}
                     </div>
@@ -187,10 +187,10 @@
                     <!-- Tab: Description -->
                     <div id="description" class="tab-content lesson-content text-luxury-text leading-relaxed">
                         {% if current_lesson.content %}
-                            <!-- Используем |safe, чтобы рендерить HTML из админки (CKEditor и т.д.) -->
+                            <!-- Використовуємо |safe, щоб рендерити HTML з адмінки (CKEditor тощо) -->
                             {{ current_lesson.content|safe|linebreaks }}
                         {% else %}
-                            <p class="italic text-luxury-muted">Дополнительное описание отсутствует.</p>
+                            <p class="italic text-luxury-muted">Додатковий опис відсутній.</p>
                         {% endif %}
                     </div>
 
@@ -199,8 +199,8 @@
                     <div id="files" class="tab-content hidden grid md:grid-cols-2 gap-4">
                         {% for file in current_lesson.files %}
                         <!--
-                           Предполагаем структуру JSON: [{"name": "Filename", "url": "/media/..."}]
-                           или если это просто список строк, код нужно адаптировать.
+                           Припускаємо структуру JSON: [{"name": "Filename", "url": "/media/..."}]
+                           або якщо це просто список рядків, код потрібно адаптувати.
                         -->
                         <a href="{{ file.url }}" download class="flex items-center gap-4 p-4 bg-luxury-card border border-white/10 hover:border-luxury-gold transition-all group rounded-sm">
                             <div class="w-10 h-10 bg-white/5 flex items-center justify-center text-luxury-gold group-hover:bg-luxury-gold group-hover:text-black transition-colors rounded-sm shrink-0">
@@ -208,7 +208,7 @@
                             </div>
                             <div class="overflow-hidden">
                                 <p class="text-white font-medium text-sm truncate group-hover:text-luxury-gold transition-colors">{{ file.name }}</p>
-                                <span class="text-[10px] text-luxury-muted uppercase tracking-widest">Скачать материал</span>
+                                <span class="text-[10px] text-luxury-muted uppercase tracking-widest">Завантажити матеріал</span>
                             </div>
                         </a>
                         {% endfor %}
@@ -216,7 +216,7 @@
                     {% endif %}
                 </div>
 
-                <!-- Мобильная навигация (внизу) -->
+                <!-- Мобільна навігація (внизу) -->
                 <div class="flex md:hidden justify-between items-center pt-6 border-t border-white/5">
                      {% if previous_lesson %}
                         <a href="{% url 'lesson_detail' course.slug previous_lesson.slug %}" class="text-luxury-muted hover:text-white text-sm font-medium flex items-center gap-2">
@@ -228,7 +228,7 @@
 
                     {% if next_lesson %}
                         <a href="{% url 'courses:lesson_detail' course.slug next_lesson.slug %}" class="bg-luxury-gold text-black px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors">
-                             След. урок →
+                             Наст. урок →
                         </a>
                     {% endif %}
                 </div>
@@ -240,23 +240,23 @@
 
 <script>
     function switchTab(evt, tabName) {
-        // Скрыть все табы
+        // Приховати всі таби
         var contents = document.getElementsByClassName("tab-content");
         for (var i = 0; i < contents.length; i++) {
             contents[i].classList.add("hidden");
         }
 
-        // Убрать стили активной кнопки
+        // Прибрати стилі активної кнопки
         var buttons = document.getElementsByClassName("tab-btn");
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].classList.remove("text-white", "border-luxury-gold");
             buttons[i].classList.add("text-luxury-muted", "border-transparent");
         }
 
-        // Показать нужный таб
+        // Показати потрібний таб
         document.getElementById(tabName).classList.remove("hidden");
 
-        // Активировать нажатую кнопку
+        // Активувати натиснуту кнопку
         evt.currentTarget.classList.remove("text-luxury-muted", "border-transparent");
         evt.currentTarget.classList.add("text-white", "border-luxury-gold");
     }
